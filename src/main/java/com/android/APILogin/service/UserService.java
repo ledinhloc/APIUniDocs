@@ -43,7 +43,7 @@ public class UserService {
         return "Login successful";
     }
 
-    public User createUser(User user) {
+    public String createUser(User user) {
         User newUser = User.builder()
                 .email(user.getEmail())
                 .password(passwordEncoder.encode(user.getPassword()))
@@ -57,7 +57,8 @@ public class UserService {
                 .build();
 
         sendOtp(newUser.getEmail(), newUser.getOtp());
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
+        return "Create user successful";
     }
 
     public String verifyOtpForActivation(OtpRequest otpRequest) {
