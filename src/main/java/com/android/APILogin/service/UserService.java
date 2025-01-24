@@ -28,7 +28,7 @@ public class UserService {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if(userOpt.isEmpty()) {
-            return "User not found";
+            return "User is not found";
         }
 
         User user = userOpt.get();
@@ -64,7 +64,7 @@ public class UserService {
     public String verifyOtpForActivation(OtpRequest otpRequest) {
         Optional<User> userOpt = userRepository.findByEmail(otpRequest.getEmail());
         if(userOpt.isEmpty()) {
-            return "User not found";
+            return "User is not found";
         }
 
         User user = userOpt.get();
@@ -83,7 +83,7 @@ public class UserService {
 
     public String generateOtp() {
         Random random = new Random();
-        int otp = 100000 + random.nextInt(900000);
+        int otp = random.nextInt(100000,1000000);
         return String.valueOf(otp);
     }
 
