@@ -19,3 +19,11 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+
+open:
+  api:
+    title: API document
+    version: v1.0.0
+    description: Mo ta
+    serverUrl: http://localhost:8080
+    serverName: server
