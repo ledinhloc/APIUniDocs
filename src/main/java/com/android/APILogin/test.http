@@ -1,0 +1,46 @@
+### Đăng ký người dùng mới
+POST http://localhost:8080/api/user/register
+Content-Type: application/json
+
+{
+  "name": "Tran An",
+  "age": 25,
+  "gender": "male",
+  "birthday": "1998-05-12",
+  "email": "tranan@gmail.com",
+  "password": "123"
+}
+
+### Đăng nhập người dùng
+POST http://localhost:8080/api/user/login
+Content-Type: application/json
+
+{
+  "email": "user@gmail.com",
+  "password": "rd123"
+}
+
+### Gửi yêu cầu quên mật khẩu qua email
+POST http://localhost:8080/api/user/forgot-password
+Content-Type: application/x-www-form-urlencoded
+
+email=user@gmail.com
+
+### Xác minh OTP để kích hoạt tài khoản người dùng
+POST http://localhost:8080/api/user/verify-otp-for-activation
+Content-Type: application/json
+
+{
+  "email": "user@gmail.com",
+  "otp": "123456"
+}
+
+### Xác minh OTP để thay đổi mật khẩu người dùng
+POST http://localhost:8080/api/user/verify-otp-for-password-reset
+Content-Type: application/json
+
+{
+  "email": "user@gmail.com",
+  "otp": "123456",
+  "newPassword": "123"
+}
