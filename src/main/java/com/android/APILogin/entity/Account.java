@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -13,21 +13,29 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    Long account_id;
 
     @Column(nullable = false)
-    private String cate_name;
+    private String email;
 
     @Column(nullable = false)
-    private String cate_desc;
+    private String password;
+
+    private LocalDateTime update_at;
 
     @Column(nullable = false)
-    private String cate_icon;
+    private LocalDateTime created_at;
+
+    @Column(nullable = false)
+    private String type;
+
+    @Column(nullable = false)
+    private Boolean is_active;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @OneToOne(mappedBy = "account")
+    private User user;
 }

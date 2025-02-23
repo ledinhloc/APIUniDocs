@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -13,21 +13,27 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+@Table(name="question_answer")
+public class QuestionAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    Long qa_id;
 
     @Column(nullable = false)
-    private String cate_name;
-
-    @Column(nullable = false)
-    private String cate_desc;
-
-    @Column(nullable = false)
-    private String cate_icon;
+    private Long parent_qa_id;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="doc_id")
+    private Document document;
+
+    @Column(nullable = false)
+    private String content;
+
+    private LocalDateTime created_at;
 }

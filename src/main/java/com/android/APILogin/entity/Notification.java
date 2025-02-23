@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -13,21 +16,25 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    Long noti_id;
 
     @Column(nullable = false)
-    private String cate_name;
+    private String title;
 
     @Column(nullable = false)
-    private String cate_desc;
+    private String content;
 
     @Column(nullable = false)
-    private String cate_icon;
+    private String type;
+
+    @Column(nullable = false)
+    private LocalDateTime created_at;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @OneToMany(mappedBy = "notification")
+    private List<UserNotifi> userNotifis;
+
 }

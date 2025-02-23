@@ -25,7 +25,7 @@ public class UserController {
     @Operation(summary = "User login", description = "Allows users to log in using email and password")
     @PostMapping("/login")
     public String login(@RequestBody User user) {
-        return userService.loginUser(user.getEmail(), user.getPassword());
+        return userService.loginUser(user.getAccount().getEmail(), user.getAccount().getPassword());
     }
 
     @Operation(summary = "Forgot password", description = "Sends a password reset request to the user's email")

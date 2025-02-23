@@ -13,21 +13,21 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+@Table(name="review_criterial")
+public class ReviewCriterial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    Long review_criterial_id;
 
+    //
     @Column(nullable = false)
-    private String cate_name;
+    private String rating;
 
-    @Column(nullable = false)
-    private String cate_desc;
-
-    @Column(nullable = false)
-    private String cate_icon;
+    @Column(unique = true)
+    private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @OneToMany(mappedBy = "reviewCriterial", cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
 }

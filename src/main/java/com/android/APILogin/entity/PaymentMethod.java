@@ -13,21 +13,16 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+@Table(name="payment_method")
+public class PaymentMethod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    Long method_id;
 
     @Column(nullable = false)
-    private String cate_name;
-
-    @Column(nullable = false)
-    private String cate_desc;
-
-    @Column(nullable = false)
-    private String cate_icon;
+    private String method_name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @OneToMany(mappedBy = "paymentMethod", cascade = CascadeType.ALL)
+    private List<Order> orders;
 }

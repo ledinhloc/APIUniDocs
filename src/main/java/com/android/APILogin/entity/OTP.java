@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -13,21 +13,22 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+@Table(name="otp")
+public class OTP {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    @Column(nullable = false)
+    Long otp_id;
 
     @Column(nullable = false)
-    private String cate_name;
+    private String otp_num;
 
+    // Hết hạn sau 5 phút
     @Column(nullable = false)
-    private String cate_desc;
-
-    @Column(nullable = false)
-    private String cate_icon;
+    private LocalDateTime otp_expired;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }

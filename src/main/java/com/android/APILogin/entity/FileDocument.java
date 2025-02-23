@@ -1,11 +1,10 @@
 package com.android.APILogin.entity;
 
+import com.android.APILogin.enums.FileType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,21 +12,19 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+public class FileDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    Long file_id;
 
     @Column(nullable = false)
-    private String cate_name;
+    private String file_url;
 
-    @Column(nullable = false)
-    private String cate_desc;
-
-    @Column(nullable = false)
-    private String cate_icon;
+    @Enumerated(EnumType.STRING)
+    private FileType file_type;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @ManyToOne
+    @JoinColumn(name= "doc_id")
+    private Document document;
 }

@@ -2,10 +2,9 @@ package com.android.APILogin.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,21 +12,23 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Category {
+@Table(name="order_discount")
+public class OrderDiscount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
-
-    @Column(nullable = false)
-    private String cate_name;
-
-    @Column(nullable = false)
-    private String cate_desc;
-
-    @Column(nullable = false)
-    private String cate_icon;
+    Long id;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    @ManyToOne
+    @JoinColumn(name="order_id")
+    private Order order;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="discount_id")
+    private Discount discount;
+
+    @Column(nullable = false)
+    @Min(1)
+    private Double discount_amount;
 }
