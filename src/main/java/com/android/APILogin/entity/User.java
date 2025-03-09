@@ -29,11 +29,17 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(nullable = false)
-    private LocalDate dob;
+    private LocalDateTime dob;
 
     @Column(nullable = false)
     private String phone;
@@ -42,15 +48,13 @@ public class User {
     private String address;
 
     @Column(nullable = false)
+    private Boolean is_active;
+
+    @Column(nullable = false)
     private LocalDateTime last_online;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
-
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id")
-    private Account account;
 
     private String avatar;
     private String gender;
