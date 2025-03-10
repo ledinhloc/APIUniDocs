@@ -20,14 +20,14 @@ public class Reaction {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="chatline_id")
-    private ChatLine chatline;
+    ChatLine chatline;
 
     @Enumerated(EnumType.STRING)
-    private IconType icon_type;
+    IconType icon_type;
 
 }

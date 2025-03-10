@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,32 +22,33 @@ public class ChatLine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long chatline_id;
 
-    private Long chatline_parent_id;
+    Long chatline_parent_id;
 
     @Column(nullable = false)
-    private String content;
+    String content;
 
     @Enumerated(EnumType.STRING)
-    private ChatStatus chat_status;
+    ChatStatus chat_status;
 
-    @Column(nullable = false)
-    private LocalDateTime send_at;
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    LocalDateTime send_at;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "con_id")
-    private Conversation conversation;
+    Conversation conversation;
 
     @JsonIgnore
     @OneToMany(mappedBy = "chatline", cascade = CascadeType.ALL)
-    private List<FileChatLine> fileChatLines;
+    List<FileChatLine> fileChatLines;
 
     @JsonIgnore
     @OneToMany(mappedBy = "chatline", cascade = CascadeType.ALL)
-    private List<Seen> seens;
+    List<Seen> seens;
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,46 +25,49 @@ public class Discount {
     Long discount_id;
 
     @Column(nullable = false)
-    private String discount_name;
+    String discount_name;
 
     @Enumerated(EnumType.STRING)
-    private DiscountType discount_type;
+    DiscountType discount_type;
 
     @Enumerated(EnumType.STRING)
-    private DiscountStatus status;
+    DiscountStatus status;
 
     @Enumerated(EnumType.STRING)
-    private Scope scope;
+    Scope scope;
 
     // Số lần sử dụng
     @Column(nullable = false)
     @Min(1)
-    private Integer usage_limit;
+    Integer usage_limit;
 
     // Số lượng sử dụng
     @Column(nullable = false)
     @Min(0)
-    private Integer used_count;
+    Integer used_count = 0;
 
     // Giá trị giảm giá
     @Column(nullable = false)
     @Min(1)
-    private Double discount_value;
+    Double discount_value ;
 
     private LocalDateTime start_date;
-    private Double max_price;
-    private LocalDateTime update_at;
-    private Double min_price;
-    private LocalDateTime end_at;
+    Double max_price;
+
+    @Column(nullable = false)
+    @UpdateTimestamp
+    LocalDateTime update_at;
+    Double min_price;
+    LocalDateTime end_at;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
-    private Long scope_id;
+    Long scope_id;
 
     @JsonIgnore
     @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL)
-    private List<OrderDiscount> orderDiscounts;
+    List<OrderDiscount> orderDiscounts;
 }

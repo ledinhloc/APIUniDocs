@@ -35,8 +35,12 @@ public class User {
     @Column(nullable = false)
     private LocalDate dob;
 
+    private String avatar;
+
     @Column(nullable = false)
     private String phone;
+
+    private String gender;
 
     @Column(nullable = false)
     private String address;
@@ -51,9 +55,6 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
-
-    private String avatar;
-    private String gender;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
@@ -94,5 +95,4 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews;
-
 }

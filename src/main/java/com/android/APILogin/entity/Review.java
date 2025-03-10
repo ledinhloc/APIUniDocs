@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -19,31 +21,35 @@ public class Review {
     Long review_id;
 
     @Column(nullable = false)
-    private Integer rate;
+    Integer rate;
 
-    @Column(nullable = false)
-    private LocalDateTime created_at;
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    LocalDateTime created_at;
 
-    private LocalDateTime updated_at;
-    private String content;
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    LocalDateTime updated_at;
+
+    String content;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="doc_id")
-    private Document document;
+    Document document;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="file_id")
-    private FileMedia fileMedia;
+    FileMedia fileMedia;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="review_criterial_id")
-    private  ReviewCriterial reviewCriterial;
+    ReviewCriterial reviewCriterial;
 }

@@ -19,15 +19,15 @@ public class Category {
     Long cate_id;
 
     @Column(nullable = false)
-    private String cate_name;
+    String cate_name;
 
     @Column(nullable = false)
-    private String cate_desc;
+    String cate_desc;
 
     @Column(nullable = false)
-    private String cate_icon;
+    String cate_icon;
 
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Document> documents;
+    List<Document> documents;
 }

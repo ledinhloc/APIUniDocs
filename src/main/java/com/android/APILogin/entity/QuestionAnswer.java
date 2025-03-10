@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -35,5 +36,7 @@ public class QuestionAnswer {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime created_at;
 }

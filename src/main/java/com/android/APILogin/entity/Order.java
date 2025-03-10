@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
@@ -24,8 +25,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long order_id;
 
-    @Column(nullable = false)
-    private LocalDateTime order_date;
+    @Column( nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime order_at;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

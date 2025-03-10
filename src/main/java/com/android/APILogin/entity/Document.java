@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -23,64 +24,65 @@ public class Document {
     Long doc_id;
 
     @Column(nullable = false)
-    private String doc_name;
+    String doc_name;
 
     // Số trang của tài liệu
     @Column(nullable = false)
-    private Integer doc_page;
+    Integer doc_page;
 
     @Column(nullable = false)
-    private String doc_image_url;
+    String doc_image_url;
 
     @Column(nullable = false, scale = 2)
-    private Double sell_price;
+    Double sell_price;
 
     @Column(nullable = false, scale = 2)
-    private Double original_price;
+    Double original_price;
 
-    @Column(nullable = false)
-    private LocalDateTime created_at;
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    LocalDateTime created_at;
 
     // Số lượt xem tài liệu
     @Column(nullable = false)
-    private Integer view;
+    Integer view = 0;
 
     // Số lượt tải tài liệu
     @Column(nullable = false)
-    private Integer download;
+    Integer download = 0;
 
     @Enumerated(EnumType.STRING)
-    private DocumentType type;
+    DocumentType type;
 
-    private String doc_desc;
+    String doc_desc;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cate_id")
-    private Category category;
+    Category category;
 
     @JsonIgnore
     @OneToMany(mappedBy = "document",cascade = CascadeType.ALL)
-    private List<Cart> carts;
+    List<Cart> carts;
 
     @JsonIgnore
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
-    private List<FileDocument> fileDocuments;
+    List<FileDocument> fileDocuments;
 
     @JsonIgnore
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails;
+    List<OrderDetail> orderDetails;
 
     @JsonIgnore
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
-    private List<QuestionAnswer> questionAnswers;
+    List<QuestionAnswer> questionAnswers;
 
     @JsonIgnore
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
-    private List<Review> reviews;
+    List<Review> reviews;
 }

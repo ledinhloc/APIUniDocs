@@ -12,7 +12,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="order_discount")
+@Table(name="order_discount",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"order_id", "discount_id"}))
 public class OrderDiscount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

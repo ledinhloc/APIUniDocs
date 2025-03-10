@@ -11,7 +11,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="user_notifi")
+@Table(name="user_notifi",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "noti_id"})
+)
 public class UserNotifi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +22,14 @@ public class UserNotifi {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "noti_id")
-    private Notification notification;
+    Notification notification;
 
     @Column(nullable = false)
-    private Boolean is_read;
+    Boolean is_read;
+
 }

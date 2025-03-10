@@ -19,15 +19,15 @@ public class Cart {
 
     @Column(nullable = false)
     @Min(1)
-    private Integer quantity;
+    Integer quantity;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "doc_id")
-    private Document document;
+    Document document;
 }

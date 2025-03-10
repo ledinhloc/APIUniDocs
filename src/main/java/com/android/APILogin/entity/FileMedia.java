@@ -21,12 +21,13 @@ public class FileMedia {
     Long file_id;
 
     @Column(nullable = false)
-    private String file_url;
+    String file_url;
 
     @Enumerated(EnumType.STRING)
-    private FileType file_type;
+    FileType file_type;
 
+    //many to one
     @JsonIgnore
     @OneToMany(mappedBy = "fileMedia", cascade = CascadeType.ALL)
-    private List<Review> reviews;
+    List<Review> reviews;
 }

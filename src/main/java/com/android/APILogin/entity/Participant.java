@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,16 +22,17 @@ public class Participant {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "con_id")
-    private Conversation conversation;
+    Conversation conversation;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    LocalDateTime join_at;
 
     @Column(nullable = false)
-    private LocalDateTime join_at;
-
-    @Column(nullable = false)
-    private LocalDateTime left_at;
+    LocalDateTime left_at;
 }

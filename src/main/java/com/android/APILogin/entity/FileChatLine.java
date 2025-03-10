@@ -19,13 +19,13 @@ public class FileChatLine {
     Long file_id;
 
     @Column(nullable = false)
-    private String file_url;
+    String file_url;
 
     @Enumerated(EnumType.STRING)
-    private FileType file_type;
+    FileType file_type;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="chatline_id")
-    private ChatLine chatline;
+    ChatLine chatline;
 }

@@ -21,20 +21,20 @@ public class OrderDetail {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="order_id")
-    private Order order;
+    Order order;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="doc_id")
-    private Document document;
+    Document document;
 
     @Column(nullable = false)
     @Min(1)
-    private Integer quantity;
+    Integer quantity;
 
     @Column(nullable = false, scale = 2)
-    private Double original_price;
+    Double original_price;
 
     @Column(nullable = false, scale = 2)
-    private Double sell_price;
+    Double sell_price;
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,32 +22,33 @@ public class Conversation {
     Long con_id;
 
     @Column(nullable = false)
-    private String con_name;
+    String con_name;
 
     @Column(nullable = false)
-    private Boolean is_group;
+    Boolean is_group;
 
-    @Column(nullable = false)
-    private LocalDateTime created_at;
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    LocalDateTime created_at;
 
     // Hình đại diện group
-    private String image;
+    String image;
 
     // Hình nền group
-    private String background_url;
+    String background_url;
 
     // Màu nền
-    private String theme_color;
+    String theme_color;
 
     @Column(nullable = false)
     @Min(2)
-    private Integer num_member;
+    Integer num_member;
 
     @JsonIgnore
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private List<Participant> participants;
+    List<Participant> participants;
 
     @JsonIgnore
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private List<ChatLine> chatLines;
+    List<ChatLine> chatLines;
 }

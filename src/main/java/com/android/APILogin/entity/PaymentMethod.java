@@ -20,9 +20,9 @@ public class PaymentMethod {
     Long method_id;
 
     @Column(nullable = false)
-    private String method_name;
+    String method_name;
 
     @JsonIgnore
     @OneToMany(mappedBy = "paymentMethod", cascade = CascadeType.ALL)
-    private List<Order> orders;
+    List<Order> orders;
 }

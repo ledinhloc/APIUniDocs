@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 public class OTP {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     Long otp_id;
 
     @Column(nullable = false)
@@ -31,4 +30,7 @@ public class OTP {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    @Column(nullable = false)
+    Boolean is_active = false;
 }

@@ -21,13 +21,12 @@ public class ReviewCriterial {
 
     //
     @Column(nullable = false)
-    private String rating;
+    String rating;
 
     @Column(unique = true)
-    private String name;
+    String name;
 
     @JsonIgnore
     @OneToMany(mappedBy = "reviewCriterial", cascade = CascadeType.ALL)
-    private List<Review> reviews;
-
+    List<Review> reviews;
 }

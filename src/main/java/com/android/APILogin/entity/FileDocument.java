@@ -18,13 +18,13 @@ public class FileDocument {
     Long file_id;
 
     @Column(nullable = false)
-    private String file_url;
+    String file_url;
 
     @Enumerated(EnumType.STRING)
-    private FileType file_type;
+    FileType file_type;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name= "doc_id")
-    private Document document;
+    Document document;
 }
