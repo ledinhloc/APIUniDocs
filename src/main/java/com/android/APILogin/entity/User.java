@@ -29,21 +29,26 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(nullable = false)
     private LocalDate dob;
 
-    private String avatar;
-
     @Column(nullable = false)
     private String phone;
 
-    private String gender;
-
     @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
+    private Boolean is_active;
 
     @Column(nullable = false)
     private LocalDateTime last_online;
@@ -51,10 +56,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id")
-    private Account account;
+    private String avatar;
+    private String gender;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
@@ -95,4 +98,5 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
 }
