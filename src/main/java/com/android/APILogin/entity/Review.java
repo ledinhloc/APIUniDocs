@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -38,18 +39,19 @@ public class Review {
     @JoinColumn(name="user_id")
     User user;
 
+    //document
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="doc_id")
     Document document;
 
+    //file
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="file_id")
-    FileMedia fileMedia;
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    List<FileMedia> fileMedias;
 
+    //review
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="review_criterial_id")
-    ReviewCriterial reviewCriterial;
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<ReviewCriterial> reviewCriterials;
 }

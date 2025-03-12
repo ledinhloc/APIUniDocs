@@ -28,6 +28,7 @@ public class FileMedia {
 
     //many to one
     @JsonIgnore
-    @OneToMany(mappedBy = "fileMedia", cascade = CascadeType.ALL)
-    List<Review> reviews;
+    @ManyToOne
+    @JoinColumn(name = "review_id")
+    Review review;
 }

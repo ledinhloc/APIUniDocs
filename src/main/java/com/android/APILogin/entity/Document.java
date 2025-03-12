@@ -82,6 +82,7 @@ public class Document {
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     List<QuestionAnswer> questionAnswers;
 
+    //review
     @JsonIgnore
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     List<Review> reviews;

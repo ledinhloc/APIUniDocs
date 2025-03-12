@@ -17,16 +17,18 @@ import java.util.List;
 public class ReviewCriterial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long review_criterial_id;
+    Long id;
 
-    //
     @Column(nullable = false)
     String rating;
 
-    @Column(unique = true)
-    String name;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="criteria_id")
+    EvaluationCriteria evaluationCriteria;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "reviewCriterial", cascade = CascadeType.ALL)
-    List<Review> reviews;
+    @ManyToOne
+    @JoinColumn(name = "review_id")
+    private Review review;
 }

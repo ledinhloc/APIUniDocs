@@ -20,7 +20,6 @@ public class QuestionAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long qa_id;
 
-    @Column(nullable = false)
     private Long parent_qa_id;
 
     @JsonIgnore
