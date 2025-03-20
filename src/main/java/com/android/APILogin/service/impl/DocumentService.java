@@ -1,8 +1,8 @@
-package com.android.APILogin.service;
+package com.android.APILogin.service.impl;
 
 import com.android.APILogin.dto.response.DocumentDto;
 import com.android.APILogin.entity.Document;
-import com.android.APILogin.mapper.DocumentMapper;
+import com.android.APILogin.dto.mapper.DocumentMapper;
 import com.android.APILogin.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

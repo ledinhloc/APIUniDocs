@@ -1,8 +1,7 @@
-package com.android.APILogin.mapper;
+package com.android.APILogin.dto.mapper;
 import com.android.APILogin.dto.response.DocumentDto;
 import com.android.APILogin.entity.Document;
 import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring")
 public interface DocumentMapper {
