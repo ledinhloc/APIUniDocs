@@ -23,32 +23,32 @@ import java.util.Set;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long order_id;
+    Long orderId;
 
     @Column( nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime order_at;
+    private LocalDateTime orderAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OrderStatus order_status;
+    private OrderStatus orderStatus;
 
     private String note;
 
     @Column(nullable = false, scale = 2)
-    private Double total_original_price;
+    private Double totalOriginalPrice;
 
     @Column(nullable = false, scale = 2)
-    private Double total_sell_price;
+    private Double totalSellPrice;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "method_id")
+    @JoinColumn(name = "methodId")
     private PaymentMethod paymentMethod;
 
     @JsonIgnore

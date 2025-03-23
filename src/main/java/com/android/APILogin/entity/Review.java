@@ -19,30 +19,30 @@ import java.util.List;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long review_id;
+    Long reviewId;
 
     @Column(nullable = false)
     Integer rate;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime created_at;
+    LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updatedAt")
     @UpdateTimestamp
-    LocalDateTime updated_at;
+    LocalDateTime updatedAt;
 
     String content;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     User user;
 
     //document
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="doc_id")
+    @JoinColumn(name="docId")
     Document document;
 
     //file

@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="order_detail")
+@Table(name="orderDetail")
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +20,12 @@ public class OrderDetail {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="order_id")
+    @JoinColumn(name="orderId")
     Order order;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="doc_id")
+    @JoinColumn(name="docId")
     Document document;
 
     @Column(nullable = false)
@@ -33,8 +33,8 @@ public class OrderDetail {
     Integer quantity;
 
     @Column(nullable = false, scale = 2)
-    Double original_price;
+    Double originalPrice;
 
     @Column(nullable = false, scale = 2)
-    Double sell_price;
+    Double sellPrice;
 }

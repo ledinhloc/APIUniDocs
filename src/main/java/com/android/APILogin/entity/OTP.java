@@ -17,20 +17,20 @@ import java.time.LocalDateTime;
 public class OTP {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long otp_id;
+    Long otpId;
 
     @Column(nullable = false)
-    private String otp_num;
+    private String otpNum;
 
     // Hết hạn sau 5 phút
     @Column(nullable = false)
-    private LocalDateTime otp_expired;
+    private LocalDateTime otpExpired;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     private User user;
 
     @Column(nullable = false)
-    Boolean is_active = false;
+    Boolean isActive = false;
 }

@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cart_id;
+    Long cartId;
 
     @Column(nullable = false)
     @Min(1)
@@ -23,7 +23,7 @@ public class Cart {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     User user;
 
     @JsonIgnore

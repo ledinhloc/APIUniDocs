@@ -14,22 +14,22 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="question_answer")
+@Table(name="questionAnswer")
 public class QuestionAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long qa_id;
+    Long qaId;
 
-    private Long parent_qa_id;
+    private Long parentQaId;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     private User user;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="doc_id")
+    @JoinColumn(name="docId")
     private Document document;
 
     @Column(nullable = false)
@@ -37,5 +37,5 @@ public class QuestionAnswer {
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }

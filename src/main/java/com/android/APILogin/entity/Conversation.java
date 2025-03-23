@@ -19,30 +19,30 @@ import java.util.List;
 public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long con_id;
+    Long conId;
 
     @Column(nullable = false)
-    String con_name;
+    String conName;
 
     @Column(nullable = false)
-    Boolean is_group;
+    Boolean isGroup;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime created_at;
+    LocalDateTime createdAt;
 
     // Hình đại diện group
     String image;
 
     // Hình nền group
-    String background_url;
+    String backgroundUrl;
 
     // Màu nền
-    String theme_color;
+    String themeColor;
 
     @Column(nullable = false)
     @Min(2)
-    Integer num_member;
+    Integer numMember;
 
     @JsonIgnore
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)

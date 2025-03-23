@@ -12,20 +12,20 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="file_chatline")
+@Table(name="fileChatline")
 public class FileChatLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long file_id;
+    Long fileId;
 
     @Column(nullable = false)
-    String file_url;
+    String fileUrl;
 
     @Enumerated(EnumType.STRING)
-    FileType file_type;
+    FileType fileType;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="chatline_id")
+    @JoinColumn(name="chatlineId")
     ChatLine chatline;
 }

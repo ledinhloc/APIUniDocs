@@ -20,7 +20,7 @@ import java.util.Set;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long noti_id;
+    Long notiId;
 
     @Column(nullable = false)
     private String title;
@@ -33,7 +33,7 @@ public class Notification {
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "notification")

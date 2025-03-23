@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="review_criterial")
+@Table(name="reviewCriterial")
 public class ReviewCriterial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +24,11 @@ public class ReviewCriterial {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="criteria_id")
+    @JoinColumn(name="criteriaId")
     EvaluationCriteria evaluationCriteria;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "review_id")
+    @JoinColumn(name = "reviewId")
     private Review review;
 }

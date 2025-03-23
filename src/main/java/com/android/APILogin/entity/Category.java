@@ -16,16 +16,16 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cate_id;
+    Long cateId;
 
     @Column(nullable = false)
-    String cate_name;
+    String cateName;
 
     @Column(nullable = false)
-    String cate_desc;
+    String cateDesc;
 
     @Column(nullable = false)
-    String cate_icon;
+    String cateIcon;
 
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)

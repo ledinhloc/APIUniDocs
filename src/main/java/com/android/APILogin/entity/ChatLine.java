@@ -16,32 +16,32 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="chat_line")
+@Table(name="chatLine")
 public class ChatLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long chatline_id;
+    Long chatlineId;
 
-    Long chatline_parent_id;
+    Long chatlineParentId;
 
     @Column(nullable = false)
     String content;
 
     @Enumerated(EnumType.STRING)
-    ChatStatus chat_status;
+    ChatStatus chatStatus;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime send_at;
+    LocalDateTime sendAt;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     User user;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "con_id")
+    @JoinColumn(name = "conId")
     Conversation conversation;
 
     @JsonIgnore

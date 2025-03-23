@@ -21,27 +21,27 @@ import java.util.Set;
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long doc_id;
+    Long docId;
 
     @Column(nullable = false)
-    String doc_name;
+    String docName;
 
     // Số trang của tài liệu
     @Column(nullable = false)
-    Integer doc_page;
+    Integer docPage;
 
     @Column(nullable = false)
-    String doc_image_url;
+    String docImageUrl;
 
     @Column(nullable = false, scale = 2)
-    Double sell_price;
+    Double sellPrice;
 
     @Column(nullable = false, scale = 2)
-    Double original_price;
+    Double originalPrice;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime created_at;
+    LocalDateTime createdAt;
 
     // Số lượt xem tài liệu
     @Column(nullable = false)
@@ -54,11 +54,11 @@ public class Document {
     @Enumerated(EnumType.STRING)
     DocumentType type;
 
-    String doc_desc;
+    String docDesc;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     User user;
 
     @JsonIgnore

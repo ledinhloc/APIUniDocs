@@ -43,7 +43,7 @@ public class UserService {
             return "Invalid password";
         }
 
-        if(! user.getIs_active()){
+        if(! user.getIsActive()){
             return "User is not active";
         }
 
@@ -56,14 +56,14 @@ public class UserService {
 
         // Tạo OTP cho User
         OTP otp = OTP.builder()
-                .otp_num(generateOtp())
-                .otp_expired(LocalDateTime.now().plusMinutes(5)) // OTP hết hạn sau 5 phút
+                .otpNum(generateOtp())
+                .otpExpired(LocalDateTime.now().plusMinutes(5)) // OTP hết hạn sau 5 phút
                 .user(newUser)
                 .build();
 
 
 
-        sendOtp(newUser.getEmail(), otp.getOtp_num());
+        sendOtp(newUser.getEmail(), otp.getOtpNum());
         userRepository.save(newUser);
         return "Create user successful";
     }
@@ -77,15 +77,15 @@ public class UserService {
         User user = userOpt.get();
         OTP otp = user.getOtps().get(0);
 
-        if(otp.getOtp_expired().isBefore(LocalDateTime.now())){
+        if(otp.getOtpExpired().isBefore(LocalDateTime.now())){
             return "OTP expired";
         }
 
-        if(!otp.getOtp_num().equals(otpRequest.getOtp())) {
+        if(!otp.getOtpNum().equals(otpRequest.getOtp())) {
             return "Invalid otp";
         }
 
-        user.setIs_active(true);
+        user.setIsActive(true);
         userRepository.save(user);
         return "User activated successfully!";
     }
@@ -114,13 +114,13 @@ public class UserService {
         //tạo otp
         User user = userOpt.get();
         OTP otp = OTP.builder()
-                .otp_num(generateOtp())
-                .otp_expired(LocalDateTime.now().plusMinutes(5))
+                .otpNum(generateOtp())
+                .otpExpired(LocalDateTime.now().plusMinutes(5))
                 .user(user)
                 .build();
         user.setOtps(List.of(otp));
 
-        sendOtp(user.getEmail(), otp.getOtp_num());
+        sendOtp(user.getEmail(), otp.getOtpNum());
         userRepository.save(user);
         return "Otp sent for reset password";
     }
@@ -134,11 +134,11 @@ public class UserService {
         User user = userOpt.get();
         OTP otpEntity = user.getOtps().get(0);
 
-        if(otpEntity.getOtp_expired().isBefore(LocalDateTime.now())){
+        if(otpEntity.getOtpExpired().isBefore(LocalDateTime.now())){
             return "OTP expired";
         }
 
-        if(! otpEntity.getOtp_num().equals(otp)){
+        if(! otpEntity.getOtpNum().equals(otp)){
             return "Invalid otp";
         }
 

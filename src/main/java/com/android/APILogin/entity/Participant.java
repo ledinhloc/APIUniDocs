@@ -21,18 +21,18 @@ public class Participant {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     User user;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "con_id")
+    @JoinColumn(name = "conId")
     Conversation conversation;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime join_at;
+    LocalDateTime joinAt;
 
     @Column(nullable = false)
-    LocalDateTime left_at;
+    LocalDateTime leftAt;
 }

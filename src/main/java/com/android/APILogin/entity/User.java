@@ -24,7 +24,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long user_id;
+    Long userId;
 
     @Column(nullable = false)
     private String name;
@@ -48,10 +48,10 @@ public class User {
     private String address;
 
     @Column(nullable = false)
-    private Boolean is_active;
+    private Boolean isActive;
 
     @Column(nullable = false)
-    private LocalDateTime last_online;
+    private LocalDateTime lastOnline;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;

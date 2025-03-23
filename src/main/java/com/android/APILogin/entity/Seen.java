@@ -16,24 +16,24 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "seen",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "chatline_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "chatlineId"})
 )
 public class Seen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long seen_id;
+    Long seenId;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     User user;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="chatline_id")
+    @JoinColumn(name="chatlineId")
     ChatLine chatline;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime seen_at;
+    LocalDateTime seenAt;
 }

@@ -17,10 +17,10 @@ import java.util.List;
 public class PaymentMethod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long method_id;
+    Long methodId;
 
     @Column(nullable = false)
-    String method_name;
+    String methodName;
 
     @JsonIgnore
     @OneToMany(mappedBy = "paymentMethod", cascade = CascadeType.ALL)

@@ -22,13 +22,13 @@ import java.util.List;
 public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long discount_id;
+    Long discountId;
 
     @Column(nullable = false)
-    String discount_name;
+    String discountName;
 
     @Enumerated(EnumType.STRING)
-    DiscountType discount_type;
+    DiscountType discountType;
 
     @Enumerated(EnumType.STRING)
     DiscountStatus status;
@@ -39,33 +39,33 @@ public class Discount {
     // Số lần sử dụng
     @Column(nullable = false)
     @Min(1)
-    Integer usage_limit;
+    Integer usageLimit;
 
     // Số lượng sử dụng
     @Column(nullable = false)
     @Min(0)
-    Integer used_count = 0;
+    Integer usedCount = 0;
 
     // Giá trị giảm giá
     @Column(nullable = false)
     @Min(1)
-    Double discount_value ;
+    Double discountValue ;
 
-    private LocalDateTime start_date;
-    Double max_price;
+    private LocalDateTime startDate;
+    Double maxPrice;
 
     @Column(nullable = false)
     @UpdateTimestamp
-    LocalDateTime update_at;
-    Double min_price;
-    LocalDateTime end_at;
+    LocalDateTime updateAt;
+    Double minPrice;
+    LocalDateTime endAt;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     User user;
 
-    Long scope_id;
+    Long scopeId;
 
     @JsonIgnore
     @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL)

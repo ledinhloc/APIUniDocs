@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="order_discount",
+@Table(name="orderDiscount",
         uniqueConstraints = @UniqueConstraint(columnNames = {"order_id", "discount_id"}))
 public class OrderDiscount {
     @Id
@@ -21,15 +21,15 @@ public class OrderDiscount {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="order_id")
+    @JoinColumn(name="orderId")
     private Order order;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="discount_id")
+    @JoinColumn(name="discountId")
     private Discount discount;
 
     @Column(nullable = false)
     @Min(1)
-    private Double discount_amount;
+    private Double discountAmount;
 }

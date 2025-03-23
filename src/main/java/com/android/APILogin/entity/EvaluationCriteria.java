@@ -12,11 +12,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="evaluation_criteria")
+@Table(name="evaluationCriteria")
 public class EvaluationCriteria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long criteria_id;
+    Long criteriaId;
 
     String description;
 

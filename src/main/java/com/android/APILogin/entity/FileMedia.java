@@ -14,21 +14,21 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="file_media")
+@Table(name="fileMedia")
 public class FileMedia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long file_id;
+    Long fileId;
 
     @Column(nullable = false)
-    String file_url;
+    String fileUrl;
 
     @Enumerated(EnumType.STRING)
-    FileType file_type;
+    FileType fileType;
 
     //many to one
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "review_id")
+    @JoinColumn(name = "reviewId")
     Review review;
 }

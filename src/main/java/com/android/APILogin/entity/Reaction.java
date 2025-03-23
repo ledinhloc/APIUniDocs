@@ -15,19 +15,19 @@ import lombok.experimental.FieldDefaults;
 public class Reaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long reaction_id;
+    Long reactionId;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     User user;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="chatline_id")
+    @JoinColumn(name="chatlineId")
     ChatLine chatline;
 
     @Enumerated(EnumType.STRING)
-    IconType icon_type;
+    IconType iconType;
 
 }
