@@ -24,4 +24,11 @@ public class DocumentService {
                 .map(documentMapper::toDocumentDto)
                 .collect(Collectors.toList());
     }
+
+    public List<DocumentDto> searchDocuments(String keyword) {
+        List<Document> documents = documentRepository.searchDocumentByName(keyword);
+        return documents.stream()
+                .map(documentMapper::toDocumentDto)
+                .collect(Collectors.toList());
+    }
 }
