@@ -1,3 +1,4 @@
+use uni_docs;
 -- 1. User (Thêm vai trò sinh viên, giảng viên)
 INSERT INTO `user` (`user_id`, `address`, `avatar`, `dob`, `email`, `gender`, `is_active`, `last_online`, `name`, `password`, `phone`, `role`, `status`) VALUES
                                                                                                                                                              (1, '227 Nguyễn Văn Cừ, Q.5', 'avatar1.jpg', '2000-05-15', '2150001@student.hcmus.edu.vn', 'Male', b'1', NOW(), 'Nguyễn Văn A', 'sv123', '0912345678', 'USER', 'ONLINE'),
@@ -90,7 +91,7 @@ INSERT INTO `participant` (`id`, `join_at`, `left_at`, `con_id`, `user_id`) VALU
                                                                                 (4, NOW(), NOW(), 3, 3);
 
 -- 14. Chat Line (Tin nhắn học tập)
-INSERT INTO `chat_line` (`chatline_id`, `chat_status`, `chatline_parent_id`, `content`, `send_at`, `con_id`, `user_id`) VALUES
+INSERT INTO `chat_line` (`chat_line_id`, `chat_status`, `chat_line_parent_id`, `content`, `send_at`, `con_id`, `user_id`) VALUES
                                                                                                                             (1, 'SEEN_BY_ALL', NULL, 'Ai có đề thi năm ngoái không?', NOW(), 1, 1),
                                                                                                                             (2, 'DELIVERED', NULL, 'Tôi cần hỗ trợ hoàn tiền', NOW(), 2, 4),
                                                                                                                             (3, 'SENT', NULL, 'Công thức tích phân trang bao nhiêu?', NOW(), 3, 2),
@@ -216,7 +217,7 @@ INSERT INTO `participant` (`id`, `join_at`, `left_at`, `con_id`, `user_id`) VALU
                                                                                 (8, NOW(), NOW(), 8, 6);
 
 -- 14. Chat Line (Tin nhắn mới)
-INSERT INTO `chat_line` (`chatline_id`, `chat_status`, `chatline_parent_id`, `content`, `send_at`, `con_id`, `user_id`) VALUES
+INSERT INTO `chat_line` (`chat_line_id`, `chat_status`, `chat_line_parent_id`, `content`, `send_at`, `con_id`, `user_id`) VALUES
                                                                                                                             (5, 'DELIVERED', NULL, 'Ai có note chương 3 Hóa hữu cơ không?', NOW(), 5, 5),
                                                                                                                             (6, 'SEEN_BY_ALL', NULL, 'Cần hỗ trợ định khoản nghiệp vụ', NOW(), 6, 8),
                                                                                                                             (7, 'SENT', NULL, 'Bình luận về tác phẩm Vợ Nhặt', NOW(), 7, 7),
@@ -258,7 +259,7 @@ INSERT INTO `reaction` (`reaction_id`, `icon_type`, `chatline_id`, `user_id`) VA
                                                                                   (4, 'LAUGH', 2, 4);
 
 -- 2. Bảng Seen (Xác nhận đã xem)
-INSERT INTO `seen` (`seen_id`, `seen_at`, `chatline_id`, `user_id`) VALUES
+INSERT INTO `seen` (`seen_id`, `seen_at`, `chat_line_id`, `user_id`) VALUES
                                                                         (1, NOW(), 1, 2),
                                                                         (2, NOW(), 3, 5),
                                                                         (3, NOW(), 5, 7),
@@ -279,7 +280,7 @@ INSERT INTO `file_media` (`file_id`, `file_type`, `file_url`, `review_id`) VALUE
                                                                                (4, 'PDF', 'https://drive.uni.com/cau_hoi.pdf', 3);
 
 -- 5. Bảng File_Chatline (File trong chat)
-INSERT INTO `file_chatline` (`file_id`, `file_type`, `file_url`, `chatline_id`) VALUES
+INSERT INTO `file_chat_line` (`file_id`, `file_type`, `file_url`, `chat_line_id`) VALUES
                                                                                     (1, 'PDF', 'https://drive.uni.com/tailieu_them.pdf', 3),
                                                                                     (2, 'DOCX', 'https://drive.uni.com/dinh_khoan_mau.docx', 6),
                                                                                     (3, 'PDF', 'https://drive.uni.com/bang_cong_thuc.pdf', 5), -- Đổi IMAGE -> PDF và .jpg -> .pdf

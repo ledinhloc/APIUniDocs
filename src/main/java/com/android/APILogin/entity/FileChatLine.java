@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="fileChatline")
+@Table(name="fileChatLine")
 public class FileChatLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,6 @@ public class FileChatLine {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="chatlineId")
-    ChatLine chatline;
+    @JoinColumn(name="chatLineId")
+    ChatLine chatLine;
 }
