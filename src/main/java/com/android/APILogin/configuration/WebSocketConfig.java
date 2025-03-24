@@ -13,12 +13,15 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        //địa chỉ URL mà client sẽ kết nối tới để thiết lập kết nối WebSocket
         registry.addEndpoint("/ws").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic/", "/queue/");
+        //topic nhìu ng, queue 1 ng
+        registry.enableSimpleBroker("/topic", "/queue");
+        // tin nhắn gửi từ client có đường dẫn bắt đầu /app
         registry.setApplicationDestinationPrefixes("/app");
     }
 }

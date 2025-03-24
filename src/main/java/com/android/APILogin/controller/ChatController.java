@@ -22,7 +22,7 @@ public class ChatController {
     @Autowired
     private ChatLineRepository chatLineRepository;
 
-
+    // gui  /topic/conversation/{conId}
     @MessageMapping("/chat/{conId}")
     @SendTo("/topic/conversation/{conId}")
     public ChatLine handleMessage(
@@ -32,22 +32,10 @@ public class ChatController {
     ) {
         // Set additional properties
         message.setSendAt(LocalDateTime.now());
-        message.setChatStatus(ChatStatus.SENT);
+        //message.setChatStatus(ChatStatus.SENT);
 
         // Save to database
         chatLineRepository.save(message);
         return message;
     }
-
-//
-//    @MessageMapping("/chat")
-//    public void sendMessage(Message message) {
-//        messagingTemplate.convertAndSend("/topic/messages", message);
-//    }
-//
-//    @GetMapping("/history")
-//    @ResponseBody
-//    public List<ChatLine> getHistory() {
-//        return chatLineRepository.findAll();
-//    }
 }
