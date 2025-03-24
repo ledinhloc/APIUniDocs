@@ -20,9 +20,9 @@ import java.util.List;
 public class ChatLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long chatlineId;
+    Long chatLineId;
 
-    Long chatlineParentId;
+    Long chatLineParentId;
 
     @Column(nullable = false)
     String content;
@@ -45,10 +45,10 @@ public class ChatLine {
     Conversation conversation;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "chatline", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatLine", cascade = CascadeType.ALL)
     List<FileChatLine> fileChatLines;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "chatline", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatLine", cascade = CascadeType.ALL)
     List<Seen> seens;
 }

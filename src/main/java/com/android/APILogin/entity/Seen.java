@@ -30,8 +30,8 @@ public class Seen {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="chatlineId")
-    ChatLine chatline;
+    @JoinColumn(name="chatLineId")
+    ChatLine chatLine;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
