@@ -1,13 +1,17 @@
 package com.android.APILogin.controller;
 
+import com.android.APILogin.dto.request.LoginRequest;
 import com.android.APILogin.dto.request.OtpRequest;
 import com.android.APILogin.dto.request.PasswordResetRequest;
 import com.android.APILogin.dto.request.UserDtoRequest;
+import com.android.APILogin.dto.response.ResponseData;
+import com.android.APILogin.dto.response.UserResponse;
 import com.android.APILogin.entity.User;
 import com.android.APILogin.service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,8 +29,8 @@ public class UserController {
 
     @Operation(summary = "User login", description = "Allows users to log in using email and password")
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        return userService.loginUser(user.getEmail(), user.getPassword());
+    public ResponseData<UserResponse> login(@RequestBody LoginRequest request) {
+        return new ResponseData<>(HttpStatus.OK.value(), "success", userService.loginUser(request.getEmail(), request.getPassword())) ;
     }
 
     @Operation(summary = "Forgot password", description = "Sends a password reset request to the user's email")

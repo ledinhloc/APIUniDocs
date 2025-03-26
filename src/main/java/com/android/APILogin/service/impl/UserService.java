@@ -3,6 +3,7 @@ package com.android.APILogin.service.impl;
 import com.android.APILogin.dto.mapper.UserMapper;
 import com.android.APILogin.dto.request.OtpRequest;
 import com.android.APILogin.dto.request.UserDtoRequest;
+import com.android.APILogin.dto.response.UserResponse;
 import com.android.APILogin.entity.OTP;
 import com.android.APILogin.entity.User;
 import com.android.APILogin.enums.AccountType;
@@ -31,23 +32,28 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-    public String loginUser(String email, String password) {
+    public UserResponse loginUser(String email, String password) {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if(userOpt.isEmpty()) {
-            return "User is not found";
+            return null;
         }
 
         User user = userOpt.get();
         if(! passwordEncoder.matches(password, user.getPassword())) {
-            return "Invalid password";
+            return null;
         }
 
         if(! user.getIsActive()){
-            return "User is not active";
+            return null;
         }
+        UserResponse userResponse = new UserResponse();
+        userResponse.setEmail(user.getEmail());
+        userResponse.setUserId(user.getUserId());
+        userResponse.setName(user.getName());
+        userResponse.setAvatar(user.getAvatar());
 
-        return "Login successful";
+        return userResponse;
     }
 
     public String createUser(UserDtoRequest userDTO) {

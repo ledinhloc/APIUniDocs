@@ -90,10 +90,24 @@
 			<version>0.2.0</version>
 			<scope>provided</scope>
 		</dependency>
+<!--		websocket-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
+<!--		(de)serialization cho các kiểu thời gian-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+<!--		cloudinary-->
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.33.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
