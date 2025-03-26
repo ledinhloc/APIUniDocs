@@ -11,7 +11,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.Date;
 
-@RestControllerAdvice
+/*@RestControllerAdvice*/
 public class GlobalExceptionHandler {
     //request body vi pham validation
     //request param, path variable không hợp lệ
