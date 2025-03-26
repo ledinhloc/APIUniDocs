@@ -7,6 +7,7 @@ import com.android.APILogin.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,19 @@ public class DocumentService {
 
     public List<DocumentDto> searchDocuments(String keyword) {
         List<Document> documents = documentRepository.searchDocumentByName(keyword);
+        return documents.stream()
+                .map(documentMapper::toDocumentDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<DocumentDto> getDocuemntsSellPriceDesc(){
+        List<Document> documents = documentRepository.findAllByOrderBySellPriceDesc();
+        return documents.stream()
+                .map(documentMapper::toDocumentDto)
+                .collect(Collectors.toList());
+    }
+    public List<DocumentDto> getDocuemntsSellPriceAsc(){
+        List<Document> documents = documentRepository.findAllByOrderBySellPriceAsc();
         return documents.stream()
                 .map(documentMapper::toDocumentDto)
                 .collect(Collectors.toList());

@@ -12,4 +12,11 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query(value = "SELECT * FROM Document WHERE LOWER(doc_name) LIKE concat('%', LOWER(:name), '%') ", nativeQuery = true)
     List<Document> searchDocumentByName(String name);
+
+    List<Document> findAllByOrderBySellPriceDesc();
+    List<Document> findAllByOrderBySellPriceAsc();
+
+
+
+
 }
