@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
-    @Query("SELECT new com.android.APILogin.dto.response.ConversationOverviewDto(" +
+    /*@Query("SELECT new com.android.APILogin.dto.response.ConversationOverviewDto(" +
             "c.conId, " +
             "CASE WHEN c.isGroup = true THEN c.conName " +
             "     ELSE (SELECT u2.name FROM Participant p2 JOIN p2.user u2 " +
@@ -28,7 +28,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
             ") " +
             "FROM Conversation c " +
             "JOIN c.participants p " +
-            "WHERE :currentUser MEMBER OF (SELECT part.user FROM Participant part WHERE part.conversation = c) " +
+            "WHERE EXISTS (SELECT part.user FROM Participant part WHERE part.conversation = c AND part.user = :currentUser) " +
             "GROUP BY c.conId, c.conName, c.isGroup, c.image")
-    List<ConversationOverviewDto> findConversationsOverview(@Param("currentUser") User currentUser);
+    List<ConversationOverviewDto> findConversationsOverview(@Param("currentUser") User currentUser);*/
 }
