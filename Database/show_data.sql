@@ -1,3 +1,9 @@
+SELECT con_id, GROUP_CONCAT(user_id ORDER BY user_id) AS user_ids
+FROM Participant
+GROUP BY con_id;
+
+
+
 -- 1. Hiển thị danh sách tất cả các table
 SHOW TABLES;
 
