@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-    List<Document> findAll();
+    //List<Document> findAll();
 
     @Query(value = "SELECT * FROM Document WHERE LOWER(doc_name) LIKE concat('%', LOWER(:name), '%') ", nativeQuery = true)
     List<Document> searchDocumentByName(String name);

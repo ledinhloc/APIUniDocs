@@ -3,14 +3,16 @@ package com.android.APILogin.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DocumentDto {
-    private Long doc_id;
-    private String doc_name;
-    private String doc_image_url;
-    private Double sell_price;
+public class DocumentDto implements Serializable {
+    private Long docId;
+    private String docName;
+    private String docImageUrl;
+    private Double sellPrice;
 }
