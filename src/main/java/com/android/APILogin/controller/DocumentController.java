@@ -35,10 +35,10 @@ public class DocumentController {
     @GetMapping("/filter")
     public ResponseData<List<DocumentDto>> filterDocumentSellPrice(@RequestParam(required = false) String keyword,
                                                                    @RequestParam(required = false) String sortType,
-                                                                   @RequestParam(required = false) List<Long> categoryIds,
+                                                                   @RequestParam(required = false) Long[] categoryIds,
                                                                    @RequestParam(required = false) Double minPrice,
                                                                    @RequestParam(required = false) Double maxPrice,
-                                                                   @RequestParam(required = false) List<Integer> ratings) {
+                                                                   @RequestParam(required = false) Integer[] ratings) {
         List<DocumentDto> listDocument = documentService.filterDocuments(keyword, sortType, categoryIds, minPrice, maxPrice, ratings);
         if(listDocument == null || listDocument.size() == 0) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(),"Data not found",listDocument);

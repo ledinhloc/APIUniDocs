@@ -37,10 +37,10 @@ public class DocumentService {
 
     public List<DocumentDto> filterDocuments(@Param("keyword") String keyword,
                                              @Param("sortType") String sortType,
-                                             @Param("cateId") List<Long> cateIds,
+                                             @Param("cateId") Long[] cateIds,
                                              @Param("minPrice") Double minPrice,
                                              @Param("maxPrice") Double maxPrice,
-                                             @Param("rating") List<Integer> ratings) {
+                                             @Param("rating") Integer[] ratings) {
         LocalDateTime day = null;
         if(sortType.equals("newest")) {
             day = LocalDateTime.now().minusDays(7);

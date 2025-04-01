@@ -36,10 +36,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "d.docId ASC")
     List<Document> filterDocument(@Param("keyword") String keyword,
                                   @Param("sortType") String sortType,
-                                  @Param("cateIds") List<Long> cateIds,
+                                  @Param("cateIds") Long[] cateIds,
                                   @Param("minPrice") Double minPrice,
                                   @Param("maxPrice") Double maxPrice,
-                                  @Param("ratings") List<Integer> ratings,
+                                  @Param("ratings") Integer[] ratings,
                                   @Param("daysAgo") LocalDateTime daysAgo);
 
     @Query(value = "SELECT * FROM Document WHERE LOWER(doc_name) LIKE concat('%', LOWER(:name), '%') ", nativeQuery = true)
