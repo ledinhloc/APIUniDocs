@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.Doc;
 import java.util.List;
 
 @RestController
@@ -17,7 +18,13 @@ public class DocumentController {
 
     @GetMapping("/list")
     public ResponseData<List<DocumentDto>> getAllDocuments() {
-        return new ResponseData<>(HttpStatus.OK.value(), "list document", documentService.getAllDocuments());
+        List<DocumentDto> listDocument = documentService.getAllDocuments();
+        if(listDocument == null || listDocument.size() == 0) {
+            return new ResponseData<>(HttpStatus.OK.value(),"list document filter",listDocument);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(), "list document", documentService.getAllDocuments());
+        }
     }
 
     @GetMapping("/search-document")
@@ -25,19 +32,19 @@ public class DocumentController {
         return new ResponseData<>(HttpStatus.OK.value(),"list document search",documentService.searchDocuments(keyword));
     }
 
-    @GetMapping("/filter/{keyword}")
-    public ResponseData<List<DocumentDto>> filterDocumentSellPrice(@PathVariable String keyword) {
-        if(keyword.isEmpty()){
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(),"Không có keyword");
+    @GetMapping("/filter")
+    public ResponseData<List<DocumentDto>> filterDocumentSellPrice(@RequestParam(required = false) String keyword,
+                                                                   @RequestParam(required = false) String sortType,
+                                                                   @RequestParam(required = false) List<Long> categoryIds,
+                                                                   @RequestParam(required = false) Double minPrice,
+                                                                   @RequestParam(required = false) Double maxPrice,
+                                                                   @RequestParam(required = false) List<Integer> ratings) {
+        List<DocumentDto> listDocument = documentService.filterDocuments(keyword, sortType, categoryIds, minPrice, maxPrice, ratings);
+        if(listDocument == null || listDocument.size() == 0) {
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(),"Data not found",listDocument);
         }
         else{
-            if(keyword.equals("desc")){
-                return new ResponseData<>(HttpStatus.OK.value(),"list document filter desc",documentService.getDocuemntsSellPriceDesc());
-            }
-            else{
-                return new ResponseData<>(HttpStatus.OK.value(),"list document filter asc",documentService.getDocuemntsSellPriceAsc());
-            }
-
+            return new ResponseData<>(HttpStatus.OK.value(),"list document filter",listDocument);
         }
     }
 }

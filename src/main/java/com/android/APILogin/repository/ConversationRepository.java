@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
-    /*@Query("SELECT new com.android.APILogin.dto.response.ConversationOverviewDto(" +
+    @Query("SELECT new com.android.APILogin.dto.response.ConversationOverviewDto(" +
             " c.conId, " +
             " CASE WHEN  c.numMember = 2 THEN " +
             "  (SELECT u.name FROM Participant p JOIN p.user u " +

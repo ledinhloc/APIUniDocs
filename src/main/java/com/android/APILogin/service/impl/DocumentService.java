@@ -5,9 +5,11 @@ import com.android.APILogin.entity.Document;
 import com.android.APILogin.dto.mapper.DocumentMapper;
 import com.android.APILogin.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.print.Doc;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,16 +35,20 @@ public class DocumentService {
                 .collect(Collectors.toList());
     }
 
-    public List<DocumentDto> getDocuemntsSellPriceDesc(){
-        List<Document> documents = documentRepository.findAllByOrderBySellPriceDesc();
+    public List<DocumentDto> filterDocuments(@Param("keyword") String keyword,
+                                             @Param("sortType") String sortType,
+                                             @Param("cateId") List<Long> cateIds,
+                                             @Param("minPrice") Double minPrice,
+                                             @Param("maxPrice") Double maxPrice,
+                                             @Param("rating") List<Integer> ratings) {
+        LocalDateTime day = null;
+        if(sortType.equals("newest")) {
+            day = LocalDateTime.now().minusDays(7);
+        }
+        List<Document> documents = documentRepository.filterDocument(keyword,sortType,cateIds,minPrice,maxPrice,ratings,day);
         return documents.stream()
                 .map(documentMapper::toDocumentDto)
                 .collect(Collectors.toList());
     }
-    public List<DocumentDto> getDocuemntsSellPriceAsc(){
-        List<Document> documents = documentRepository.findAllByOrderBySellPriceAsc();
-        return documents.stream()
-                .map(documentMapper::toDocumentDto)
-                .collect(Collectors.toList());
-    }
+
 }

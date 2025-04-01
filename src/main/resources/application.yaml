@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/uni_docs"
-    username: ${DATASOURCE_NAME:abc}
-    password: ${DATASOURCE_PASS:abc}
+    username: ${DATASOURCE_NAME:root}
+    password: ${DATASOURCE_PASS:123456}
   jpa:
     hibernate:
       ddl-auto: update
