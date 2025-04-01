@@ -6,10 +6,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface DocumentMapper {
-    @Mapping(source = "docId", target = "docId")
-    @Mapping(source = "docName", target = "docName")
-    @Mapping(source = "docImageUrl", target = "docImageUrl")
-    @Mapping(source = "sellPrice", target = "sellPrice")
     DocumentDto toDocumentDto(Document document);
     Document toDocument(DocumentDto documentDto);
 }
