@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-    List<Document> findAll();
+    //List<Document> findAll();
 
     @Query(value = "SELECT d FROM Document d " +
             "WHERE " +

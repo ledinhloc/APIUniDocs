@@ -9,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocumentDto {
-    private Long docId;
-    private String docName;
-    private String docImageUrl;
-    private Double sellPrice;
+    private Long doc_id;
+    private String doc_name;
+    private String doc_image_url;
+    private Double sell_price;
 }

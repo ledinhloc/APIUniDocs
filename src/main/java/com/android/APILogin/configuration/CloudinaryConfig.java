@@ -1,6 +1,8 @@
 package com.android.APILogin.configuration;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,13 +11,20 @@ import java.util.Map;
 
 @Configuration
 public class CloudinaryConfig {
+    @Value("${CLOUDINARY_CLOUD_NAME}")
+    private String cloudName;
+
+    @Value("${CLOUDINARY_API_KEY}")
+    private String apiKey;
+
+    @Value("${CLOUDINARY_API_SECRET}")
+    private String apiSecret;
+
     @Bean
-    public Cloudinary getCloudinary() {
-        Map<String, Object> config = new HashMap<>();
-        config.put("cloud_name", "locdinhle");
-        config.put("api_key", "453485589114544");
-        config.put("api_secret", "OsPuxwBG-h_j_zZ4Ge-u52jGc64");
-        config.put("secure", true);
-        return new Cloudinary(config);
+    public Cloudinary cloudinary() {
+        return new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret));
     }
 }
