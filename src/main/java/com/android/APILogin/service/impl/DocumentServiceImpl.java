@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class DocumentService {
+public class DocumentServiceImpl {
     @Autowired
     private DocumentRepository documentRepository;
 
@@ -23,8 +23,12 @@ public class DocumentService {
 
     public List<DocumentDto> getAllDocuments() {
         List<Document> documents = documentRepository.findAll();
-        return documents.stream()
-                .map(documentMapper::toDocumentDto)
+        return documents.stream().map(d -> DocumentDto.builder()
+                        .docId(d.getDocId())
+                        .docName(d.getDocName())
+                        .docImageUrl(d.getDocImageUrl())
+                        .sellPrice(d.getSellPrice())
+                        .build())
                 .collect(Collectors.toList());
     }
 
@@ -49,6 +53,25 @@ public class DocumentService {
         return documents.stream()
                 .map(documentMapper::toDocumentDto)
                 .collect(Collectors.toList());
+    }
+
+    public DocumentDto getDocumentById(Long id) {
+        Optional<Document> documentOtp = documentRepository.findDocumentByDocId(id);
+        Document document = documentOtp.orElse(null);
+        DocumentDto documentDto = DocumentDto.builder()
+                .docId(document.getDocId())
+                .docName(document.getDocName())
+                .docImageUrl(document.getDocImageUrl())
+                .sellPrice(document.getSellPrice())
+                .originalPrice(document.getOriginalPrice())
+                .createdAt(document.getCreatedAt())
+                .docDesc(document.getDocDesc())
+                .docPage(document.getDocPage())
+                .download(document.getDownload())
+                .type(document.getType())
+                .view(document.getView())
+                .build();
+        return documentDto;
     }
 
 }

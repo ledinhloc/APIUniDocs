@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     //List<Document> findAll();
@@ -44,4 +45,11 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query(value = "SELECT * FROM Document WHERE LOWER(doc_name) LIKE concat('%', LOWER(:name), '%') ", nativeQuery = true)
     List<Document> searchDocumentByName(String name);
+
+    Document getDocumentByDocId(@NonNull Long docId);
+
+    Optional<Document> findDocumentByDocId(Long docId);
+
+    @Query(value="SELECT ")
+    Optional<Integer> findTotalQuantitySoldByDocId(Long docId);
 }

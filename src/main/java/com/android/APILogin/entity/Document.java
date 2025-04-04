@@ -63,7 +63,7 @@ public class Document {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "cate_id")
+    @JoinColumn(name = "cateId")
     Category category;
 
     @JsonIgnore
@@ -86,4 +86,8 @@ public class Document {
     @JsonIgnore
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     List<Review> reviews;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
+    List<DocumentImage> documentImages;
 }
