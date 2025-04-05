@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class DocumentImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long ImageId;
+    Long imageId;
 
     @Column(nullable = false)
     String docImageUrl;

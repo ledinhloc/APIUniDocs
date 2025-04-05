@@ -1,18 +1,20 @@
 package com.android.APILogin.repository;
 
 
+import com.android.APILogin.dto.response.DocumentDto;
 import com.android.APILogin.entity.Document;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
+@Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-    //List<Document> findAll();
+    List<Document> findAll();
 
     @Query(value = "SELECT d FROM Document d " +
             "WHERE " +
@@ -46,10 +48,12 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query(value = "SELECT * FROM Document WHERE LOWER(doc_name) LIKE concat('%', LOWER(:name), '%') ", nativeQuery = true)
     List<Document> searchDocumentByName(String name);
 
-    Document getDocumentByDocId(@NonNull Long docId);
-
-    Optional<Document> findDocumentByDocId(Long docId);
-
-    @Query(value="SELECT ")
-    Optional<Integer> findTotalQuantitySoldByDocId(Long docId);
+    @Query(value = "SELECT new com.android.APILogin.dto.response.DocumentDto(" +
+            "d.docId, d.docName, d.docImageUrl, d.sellPrice, d.originalPrice, d.docPage, " +
+            "d.view, d.download, d.docDesc, d.type, d.createdAt, d.maxQuantity, " +
+            "(SELECT COALESCE(SUM(od.quantity), 0) FROM OrderDetail od WHERE od.document.docId = d.docId), " +
+            "(SELECT COALESCE(AVG(r.rate), 0) FROM Review r WHERE r.document.docId = d.docId)" +
+            ") " +
+            "FROM Document d WHERE d.docId = :id")
+    Optional<DocumentDto> findAllDocumentDetail(@Param("id") Long id);
 }

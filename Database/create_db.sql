@@ -14,11 +14,11 @@ INSERT INTO `category` (`cate_id`, `cate_desc`, `cate_icon`, `cate_name`) VALUES
                                                                               (4, 'Bài giảng Vật lý đại cương', 'physics.png', 'Vật Lý');
 
 -- 3. Document (Tài liệu học thuật)
-INSERT INTO `document` (`doc_id`, `created_at`, `doc_desc`, `doc_image_url`, `doc_name`, `doc_page`, `download`, `original_price`, `sell_price`, `type`, `view`, `cate_id`, `user_id`) VALUES
-                                                                                                                                                                                           (1, NOW(), 'Bài giảng chương 1-4', 'cslt_ch1.jpg', 'CSLT - Chương 1: C++ Basics', 45, 120, 0.0, 10000.0, 'DIGITAL', 300, 1, 3),
-                                                                                                                                                                                           (2, NOW(), 'Đề thi 2023 có đáp án', 'de_thi_2023.jpg', 'Đề Thi Giữa Kỳ CSLT 2023', 10, 450, 5000.0, 2000.0, 'DIGITAL', 1500, 3, 2),
-                                                                                                                                                                                           (3, NOW(), 'Slide bài giảng full', 'physics_slide.jpg', 'Vật Lý Điện Từ Học', 120, 80, 15000.0, 10000.0, 'BOTH', 200, 4, 3),
-                                                                                                                                                                                           (4, NOW(), 'Tổng hợp công thức', 'math_cheat_sheet.jpg', 'Cheat Sheet Toán A1', 20, 300, 0.0, 5000.0, 'DIGITAL', 800, 2, 1);
+INSERT INTO `document` (`doc_id`, `created_at`, `doc_desc`, `doc_image_url`, `doc_name`, `doc_page`, `download`, `max_quantity`, `original_price`, `sell_price`, `type`, `view`, `cate_id`, `user_id`) VALUES
+                                                                                                                                                                                           (1, NOW(), 'Bài giảng chương 1-4', 'cslt_ch1.jpg', 'CSLT - Chương 1: C++ Basics', 45, 120, 50, 0.0, 10000.0, 'DIGITAL', 300, 1, 3),
+                                                                                                                                                                                           (2, NOW(), 'Đề thi 2023 có đáp án', 'de_thi_2023.jpg', 'Đề Thi Giữa Kỳ CSLT 2023', 10, 450, 50, 5000.0, 2000.0, 'DIGITAL', 1500, 3, 2),
+                                                                                                                                                                                           (3, NOW(), 'Slide bài giảng full', 'physics_slide.jpg', 'Vật Lý Điện Từ Học', 120, 80, 50, 15000.0, 10000.0, 'BOTH', 200, 4, 3),
+                                                                                                                                                                                           (4, NOW(), 'Tổng hợp công thức', 'math_cheat_sheet.jpg', 'Cheat Sheet Toán A1', 20, 300, 50, 0.0, 5000.0, 'DIGITAL', 800, 2, 1);
 
 -- 4. Cart (Giỏ hàng sinh viên)
 INSERT INTO `cart` (`cart_id`, `quantity`, `doc_id`, `user_id`) VALUES
@@ -140,11 +140,11 @@ INSERT INTO `category` (`cate_id`, `cate_desc`, `cate_icon`, `cate_name`) VALUES
                                                                               (8, 'Tài liệu Văn học Việt Nam', 'literature.png', 'Văn Học');
 
 -- 3. Document (Thêm tài liệu học thuật)
-INSERT INTO `document` (`doc_id`, `created_at`, `doc_desc`, `doc_image_url`, `doc_name`, `doc_page`, `download`, `original_price`, `sell_price`, `type`, `view`, `cate_id`, `user_id`) VALUES
-                                                                                                                                                                                           (5, NOW(), 'Tổng hợp phản ứng hóa hữu cơ', 'hoa_huu_co.jpg', 'Hóa Hữu Cơ Cơ Bản', 80, 90, 8000.0, 5000.0, 'DIGITAL', 150, 5, 6),
-                                                                                                                                                                                           (6, NOW(), 'Slide bài giảng full chương trình', 'kinh_te_vi_mo.jpg', 'Kinh Tế Vĩ Mô', 95, 200, 12000.0, 8000.0, 'BOTH', 450, 6, 6),
-                                                                                                                                                                                           (7, NOW(), 'Đề thi + đáp án 2024', 'nguyen_ly_ke_toan.jpg', 'Nguyên Lý Kế Toán', 15, 180, 0.0, 3000.0, 'DIGITAL', 600, 7, 5),
-                                                                                                                                                                                           (8, NOW(), 'Phân tích tác phẩm Chí Phèo', 'van_hoc.jpg', 'Văn Học 1945-1954', 45, 75, 7000.0, 5000.0, 'PHYSICAL', 120, 8, 7);
+INSERT INTO `document` (`doc_id`, `created_at`, `doc_desc`, `doc_image_url`, `doc_name`, `doc_page`, `download`, `max_quantity`, `original_price`, `sell_price`, `type`, `view`, `cate_id`, `user_id`) VALUES
+                                                                                                                                                                                           (5, NOW(), 'Tổng hợp phản ứng hóa hữu cơ', 'hoa_huu_co.jpg', 'Hóa Hữu Cơ Cơ Bản', 80, 90, 50, 8000.0, 5000.0, 'DIGITAL', 150, 5, 6),
+                                                                                                                                                                                           (6, NOW(), 'Slide bài giảng full chương trình', 'kinh_te_vi_mo.jpg', 'Kinh Tế Vĩ Mô', 95, 200, 50, 12000.0, 8000.0, 'BOTH', 450, 6, 6),
+                                                                                                                                                                                           (7, NOW(), 'Đề thi + đáp án 2024', 'nguyen_ly_ke_toan.jpg', 'Nguyên Lý Kế Toán', 15, 180, 50, 0.0, 3000.0, 'DIGITAL', 600, 7, 5),
+                                                                                                                                                                                           (8, NOW(), 'Phân tích tác phẩm Chí Phèo', 'van_hoc.jpg', 'Văn Học 1945-1954', 45, 75, 50, 7000.0, 5000.0, 'PHYSICAL', 120, 8, 7);
 
 -- 4. Cart (Thêm vào giỏ hàng)
 INSERT INTO `cart` (`cart_id`, `quantity`, `doc_id`, `user_id`) VALUES
@@ -292,3 +292,7 @@ INSERT INTO `order_discount` (`id`, `discount_amount`, `discount_id`, `order_id`
                                                                                       (2, 5000.0, 2, 2),
                                                                                       (3, 3000.0, 3, 5),
                                                                                       (4, 7000.0, 6, 6);
+-- 1. DocumentImage
+INSERT INTO `document_image` (`image_id`, `doc_image_url`, `doc_id`) VALUES
+                                                                                      (1, 'https://drive.google.com/file/d/1xkVuSSgp2DgidgeUdEjntLPC-oj6B4-0/view?usp=sharing', 1),
+                                                                                      (2, 'https://drive.google.com/file/d/1kiHhyvtDc5R_pmsjaqM23Rv_DOOg-Ion/view?usp=sharing', 1);

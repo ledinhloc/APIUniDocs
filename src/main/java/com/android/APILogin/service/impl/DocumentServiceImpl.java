@@ -1,8 +1,12 @@
 package com.android.APILogin.service.impl;
 
+import com.android.APILogin.dto.mapper.DocumentImageMapper;
 import com.android.APILogin.dto.response.DocumentDto;
+import com.android.APILogin.dto.response.DocumentImageDto;
 import com.android.APILogin.entity.Document;
 import com.android.APILogin.dto.mapper.DocumentMapper;
+import com.android.APILogin.entity.DocumentImage;
+import com.android.APILogin.repository.DocumentImageRepository;
 import com.android.APILogin.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -19,16 +23,16 @@ public class DocumentServiceImpl {
     private DocumentRepository documentRepository;
 
     @Autowired
+    private DocumentImageRepository documentImageRepository;
+
+    @Autowired
     private DocumentMapper documentMapper;
+    @Autowired
+    private DocumentImageMapper documentImageMapper;
 
     public List<DocumentDto> getAllDocuments() {
         List<Document> documents = documentRepository.findAll();
-        return documents.stream().map(d -> DocumentDto.builder()
-                        .docId(d.getDocId())
-                        .docName(d.getDocName())
-                        .docImageUrl(d.getDocImageUrl())
-                        .sellPrice(d.getSellPrice())
-                        .build())
+        return documents.stream().map(d -> new DocumentDto(d.getDocId(),d.getDocName(),d.getDocImageUrl(),d.getSellPrice()))
                 .collect(Collectors.toList());
     }
 
@@ -56,22 +60,16 @@ public class DocumentServiceImpl {
     }
 
     public DocumentDto getDocumentById(Long id) {
-        Optional<Document> documentOtp = documentRepository.findDocumentByDocId(id);
-        Document document = documentOtp.orElse(null);
-        DocumentDto documentDto = DocumentDto.builder()
-                .docId(document.getDocId())
-                .docName(document.getDocName())
-                .docImageUrl(document.getDocImageUrl())
-                .sellPrice(document.getSellPrice())
-                .originalPrice(document.getOriginalPrice())
-                .createdAt(document.getCreatedAt())
-                .docDesc(document.getDocDesc())
-                .docPage(document.getDocPage())
-                .download(document.getDownload())
-                .type(document.getType())
-                .view(document.getView())
-                .build();
-        return documentDto;
+        Optional<DocumentDto> documentOtp = documentRepository.findAllDocumentDetail(id);
+        DocumentDto document = documentOtp.orElse(null);
+        return document;
+    }
+
+    public List<DocumentImageDto> getAllImages(Long id) {
+        List<DocumentImage> images = documentImageRepository.findAllByDocument_DocId(id);
+        return images.stream()
+                .map(documentImageMapper::toDocumentImageDto)
+                .collect(Collectors.toList());
     }
 
 }

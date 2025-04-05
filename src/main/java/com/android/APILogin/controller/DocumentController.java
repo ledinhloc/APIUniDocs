@@ -1,7 +1,9 @@
 package com.android.APILogin.controller;
 
 import com.android.APILogin.dto.response.DocumentDto;
+import com.android.APILogin.dto.response.DocumentImageDto;
 import com.android.APILogin.dto.response.ResponseData;
+import com.android.APILogin.entity.DocumentImage;
 import com.android.APILogin.service.impl.DocumentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,4 +59,16 @@ public class DocumentController {
             return new ResponseData<>(HttpStatus.OK.value(),"document detail",document);
         }
     }
+
+    @GetMapping("/images/{id}")
+    public ResponseData<List<DocumentImageDto>> getAllImageByDocumentId(@PathVariable Long id) {
+        List<DocumentImageDto> images = documentServiceImpl.getAllImages(id);
+        if(images == null) {
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(),"Data not found",images);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(),"document images",images);
+        }
+    }
+
 }

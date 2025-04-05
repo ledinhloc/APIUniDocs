@@ -56,6 +56,10 @@ public class Document {
 
     String docDesc;
 
+    // Số lượng tối đa
+    @Column(nullable = false)
+    Integer maxQuantity = 0;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userId")

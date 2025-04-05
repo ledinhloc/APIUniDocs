@@ -23,8 +23,11 @@ public class DocumentDto {
     private String docDesc;
     private DocumentType type;
     private LocalDateTime createdAt;
+    private Integer maxQuantity;
+    private Long totalSold;
+    private Double avgRate;
 
-    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice){
+    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice) {
         this.docId = docId;
         this.docName = docName;
         this.docImageUrl = docImageUrl;
