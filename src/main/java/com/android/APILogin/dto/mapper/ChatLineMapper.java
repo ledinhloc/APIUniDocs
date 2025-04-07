@@ -14,6 +14,5 @@ public interface ChatLineMapper {
     @Mapping(source = "conversation.conId", target = "conversationId")
     ChatLineDto toDto(ChatLine chatLine);
 
-
     List<ChatLineDto> toDtoList(List<ChatLine> chatLines);
 }

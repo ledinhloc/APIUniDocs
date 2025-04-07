@@ -1,6 +1,7 @@
 package com.android.APILogin.entity;
 
 import com.android.APILogin.enums.ChatStatus;
+import com.android.APILogin.enums.ChatType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,10 @@ public class ChatLine {
 
     @Enumerated(EnumType.STRING)
     ChatStatus chatStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ChatType chatType = ChatType.MESS;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp

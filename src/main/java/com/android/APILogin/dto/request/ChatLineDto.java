@@ -3,6 +3,7 @@ package com.android.APILogin.dto.request;
 import com.android.APILogin.entity.FileChatLine;
 import com.android.APILogin.entity.Seen;
 import com.android.APILogin.enums.ChatStatus;
+import com.android.APILogin.enums.ChatType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class ChatLineDto implements Serializable {
     private Long chatLineParentId;
     private String content;
     private ChatStatus chatStatus;
+    private ChatType chatType;
 
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
