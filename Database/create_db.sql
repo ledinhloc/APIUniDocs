@@ -70,11 +70,11 @@ INSERT INTO `evaluation_criteria` (`criteria_id`, `description`, `name`) VALUES
                                                                              (4, 'Giá trị thực tiễn', 'Ứng Dụng');
 
 -- 11. Review Criterial (Đánh giá chi tiết)
-INSERT INTO `review_criterial` (`id`, `rating`, `criteria_id`, `review_id`) VALUES
-                                                                                (1, '5', 1, 1),
-                                                                                (2, '4', 3, 1),
-                                                                                (3, '5', 2, 4),
-                                                                                (4, '3', 4, 3);
+INSERT INTO `review_criterial` (`id`, `content`, `criteria_id`, `review_id`) VALUES
+                                                                                (1, 'tot', 1, 1),
+                                                                                (2, 'aa', 3, 1),
+                                                                                (3, '5ss', 2, 4),
+                                                                                (4, '3ff', 4, 3);
 
 -- 12. Conversation (Nhóm trao đổi học tập)
 INSERT INTO `conversation` (`con_id`, `background_url`, `con_name`, `created_at`, `image`, `is_group`, `num_member`, `theme_color`) VALUES
@@ -196,11 +196,11 @@ INSERT INTO `evaluation_criteria` (`criteria_id`, `description`, `name`) VALUES
                                                                              (8, 'Hỗ trợ sau mua', 'Hỗ Trợ');
 
 -- 11. Review Criterial (Đánh giá chi tiết)
-INSERT INTO `review_criterial` (`id`, `rating`, `criteria_id`, `review_id`) VALUES
-                                                                                (5, '4', 5, 5),
-                                                                                (6, '2', 6, 6),
-                                                                                (7, '5', 7, 7),
-                                                                                (8, '4', 8, 8);
+INSERT INTO `review_criterial` (`id`, `content`, `criteria_id`, `review_id`) VALUES
+                                                                                (5, 'tot', 5, 5),
+                                                                                (6, '2as', 6, 6),
+                                                                                (7, '5aa', 7, 7),
+                                                                                (8, '4ff', 8, 8);
 
 -- 12. Conversation (Nhóm mới)
 INSERT INTO `conversation` (`con_id`, `background_url`, `con_name`, `created_at`, `image`, `is_group`, `num_member`, `theme_color`) VALUES

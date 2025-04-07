@@ -31,8 +31,9 @@ public class DocumentServiceImpl {
     private DocumentImageMapper documentImageMapper;
 
     public List<DocumentDto> getAllDocuments() {
-        List<Document> documents = documentRepository.findAll();
-        return documents.stream().map(d -> new DocumentDto(d.getDocId(),d.getDocName(),d.getDocImageUrl(),d.getSellPrice()))
+        List<DocumentDto> documents = documentRepository.findAllDoc();
+        return documents.stream()
+                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
                 .collect(Collectors.toList());
     }
 
@@ -69,6 +70,16 @@ public class DocumentServiceImpl {
         List<DocumentImage> images = documentImageRepository.findAllByDocument_DocId(id);
         return images.stream()
                 .map(documentImageMapper::toDocumentImageDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<DocumentDto> getRelevantDocuments(String type, Long id, Long docId) {
+        List<DocumentDto> documents = documentRepository.findDocByTypeAndId(type,id,docId);
+        if(documents.isEmpty()) {
+            return null;
+        }
+        return documents.stream()
+                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
                 .collect(Collectors.toList());
     }
 

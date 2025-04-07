@@ -1,5 +1,6 @@
 package com.android.APILogin.dto.response;
 
+import com.android.APILogin.entity.Document;
 import com.android.APILogin.enums.DocumentType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,13 +25,34 @@ public class DocumentDto {
     private DocumentType type;
     private LocalDateTime createdAt;
     private Integer maxQuantity;
+    private Long userId;
+    private Long cateId;
     private Long totalSold;
     private Double avgRate;
+    private Long totalReview;
+
 
     public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice) {
         this.docId = docId;
         this.docName = docName;
         this.docImageUrl = docImageUrl;
         this.sellPrice = sellPrice;
+    }
+
+    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice, Long totalSold) {
+        this.docId = docId;
+        this.docName = docName;
+        this.docImageUrl = docImageUrl;
+        this.sellPrice = sellPrice;
+        this.totalSold = totalSold;
+    }
+
+    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice, Long totalSold, Double avgRate) {
+        this.docId = docId;
+        this.docName = docName;
+        this.docImageUrl = docImageUrl;
+        this.sellPrice = sellPrice;
+        this.totalSold = totalSold;
+        this.avgRate = avgRate;
     }
 }

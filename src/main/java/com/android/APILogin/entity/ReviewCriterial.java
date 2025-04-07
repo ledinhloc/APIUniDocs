@@ -20,7 +20,7 @@ public class ReviewCriterial {
     Long id;
 
     @Column(nullable = false)
-    String rating;
+    String content;
 
     @JsonIgnore
     @ManyToOne

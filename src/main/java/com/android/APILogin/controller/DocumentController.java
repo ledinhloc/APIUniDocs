@@ -21,7 +21,7 @@ public class DocumentController {
     public ResponseData<List<DocumentDto>> getAllDocuments() {
         List<DocumentDto> listDocument = documentServiceImpl.getAllDocuments();
         if(listDocument == null || listDocument.size() == 0) {
-            return new ResponseData<>(HttpStatus.OK.value(),"list document filter",listDocument);
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Not found",listDocument);
         }
         else{
             return new ResponseData<>(HttpStatus.OK.value(), "list document", documentServiceImpl.getAllDocuments());
@@ -42,7 +42,7 @@ public class DocumentController {
                                                                    @RequestParam(required = false) Integer[] ratings) {
         List<DocumentDto> listDocument = documentServiceImpl.filterDocuments(keyword, sortType, categoryIds, minPrice, maxPrice, ratings);
         if(listDocument == null || listDocument.size() == 0) {
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(),"Data not found",listDocument);
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Data not found",listDocument);
         }
         else{
             return new ResponseData<>(HttpStatus.OK.value(),"list document filter",listDocument);
@@ -53,7 +53,7 @@ public class DocumentController {
     public ResponseData<DocumentDto> getDocumentDetail(@RequestParam Long id) {
         DocumentDto document = documentServiceImpl.getDocumentById(id);
         if(document == null) {
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(),"Data not found",document);
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Data not found",document);
         }
         else{
             return new ResponseData<>(HttpStatus.OK.value(),"document detail",document);
@@ -64,10 +64,21 @@ public class DocumentController {
     public ResponseData<List<DocumentImageDto>> getAllImageByDocumentId(@PathVariable Long id) {
         List<DocumentImageDto> images = documentServiceImpl.getAllImages(id);
         if(images == null) {
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(),"Data not found",images);
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Data not found",images);
         }
         else{
             return new ResponseData<>(HttpStatus.OK.value(),"document images",images);
+        }
+    }
+
+    @GetMapping("/relevance")
+    public ResponseData<List<DocumentDto>> getDocumentRelevance(@RequestParam String type, @RequestParam Long id, @RequestParam Long docId) {
+        List<DocumentDto> documentDtos = documentServiceImpl.getRelevantDocuments(type,id, docId);
+        if(documentDtos == null) {
+            return new ResponseData<>(HttpStatus.OK.value(),"Data not found",documentDtos);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(),"document relevance",documentDtos);
         }
     }
 

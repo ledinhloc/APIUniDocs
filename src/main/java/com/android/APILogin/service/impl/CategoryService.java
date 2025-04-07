@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
 public class CategoryService {
@@ -24,5 +25,13 @@ public class CategoryService {
         return categories.stream()
                 .map(categoryMapper::toCategoryDto)
                 .collect(Collectors.toList());
+    }
+
+    public CategoryDto getCategoryById(Long id) {
+        Optional<Category> categoryOtp = categoryRepository.findCategoryByCateId(id);
+        if(categoryOtp.isEmpty()) {
+            return null;
+        }
+        return categoryMapper.toCategoryDto(categoryOtp.get());
     }
 }

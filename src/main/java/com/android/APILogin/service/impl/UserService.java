@@ -3,6 +3,7 @@ package com.android.APILogin.service.impl;
 import com.android.APILogin.dto.mapper.UserMapper;
 import com.android.APILogin.dto.request.OtpRequest;
 import com.android.APILogin.dto.request.UserDtoRequest;
+import com.android.APILogin.dto.request.UserInfoDto;
 import com.android.APILogin.dto.response.UserResponse;
 import com.android.APILogin.entity.OTP;
 import com.android.APILogin.entity.User;
@@ -151,5 +152,14 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return "Password reset successful";
+    }
+
+    public UserInfoDto getUserInfoByDocId(Long docId){
+        Optional<UserInfoDto> userOtp = userRepository.findUserInfoByDocumentId(docId);
+        if(userOtp.isEmpty()) {
+            return null;
+        }
+        UserInfoDto userInfoDto = userOtp.get();
+        return userInfoDto;
     }
 }

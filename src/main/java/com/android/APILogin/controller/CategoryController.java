@@ -6,6 +6,7 @@ import com.android.APILogin.service.impl.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,5 +21,16 @@ public class CategoryController {
     @GetMapping("/list")
     public ResponseData<List<CategoryDto>> getAllCategories() {
         return new ResponseData<>(HttpStatus.OK.value(), "list category", categoryService.getAllCategories());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseData<CategoryDto> getCategoryById(@PathVariable("id") Long id) {
+        CategoryDto categoryDto = categoryService.getCategoryById(id);
+        if(categoryDto == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "category not found", categoryDto);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(), "category found", categoryDto);
+        }
     }
 }

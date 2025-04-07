@@ -14,7 +14,11 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-    List<Document> findAll();
+    @Query(value = "SELECT new com.android.APILogin.dto.response.DocumentDto(" +
+            "d.docId, d.docName, d.docImageUrl, d.sellPrice, " +
+            "(SELECT COALESCE(SUM(od.quantity), 0) FROM OrderDetail od WHERE od.document.docId = d.docId)) " +
+            "FROM Document d ")
+    List<DocumentDto> findAllDoc();
 
     @Query(value = "SELECT d FROM Document d " +
             "WHERE " +
@@ -50,10 +54,25 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query(value = "SELECT new com.android.APILogin.dto.response.DocumentDto(" +
             "d.docId, d.docName, d.docImageUrl, d.sellPrice, d.originalPrice, d.docPage, " +
-            "d.view, d.download, d.docDesc, d.type, d.createdAt, d.maxQuantity, " +
+            "d.view, d.download, d.docDesc, d.type, d.createdAt, d.maxQuantity, d.user.userId, d.category.cateId, " +
             "(SELECT COALESCE(SUM(od.quantity), 0) FROM OrderDetail od WHERE od.document.docId = d.docId), " +
-            "(SELECT COALESCE(AVG(r.rate), 0) FROM Review r WHERE r.document.docId = d.docId)" +
+            "(SELECT COALESCE(AVG(r.rate), 0) FROM Review r WHERE r.document.docId = d.docId), " +
+            "(SELECT COUNT(r) FROM Review r WHERE r.document.docId = d.docId)" +
             ") " +
-            "FROM Document d WHERE d.docId = :id")
+            "FROM Document d " +
+            "WHERE d.docId = :id")
     Optional<DocumentDto> findAllDocumentDetail(@Param("id") Long id);
+
+    @Query("SELECT new com.android.APILogin.dto.response.DocumentDto(" +
+            "  d.docId, d.docName, d.docImageUrl, d.sellPrice, " +
+            "  (SELECT COALESCE(SUM(od.quantity), 0) " +
+            "     FROM OrderDetail od " +
+            "    WHERE od.document.docId = d.docId)" +
+            ") " +
+            "FROM Document d " +
+            "WHERE ( :type = 'user' AND d.user.userId    = :id AND d.docId <> :docId) " +
+            "   OR ( :type = 'cate' AND d.category.cateId = :id AND d.docId <> :docId)")
+    List<DocumentDto> findDocByTypeAndId(@Param("type") String type, @Param("id")   Long   id, @Param("docId") Long   docId);
+
+
 }

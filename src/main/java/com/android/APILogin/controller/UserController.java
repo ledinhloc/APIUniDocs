@@ -1,9 +1,6 @@
 package com.android.APILogin.controller;
 
-import com.android.APILogin.dto.request.LoginRequest;
-import com.android.APILogin.dto.request.OtpRequest;
-import com.android.APILogin.dto.request.PasswordResetRequest;
-import com.android.APILogin.dto.request.UserDtoRequest;
+import com.android.APILogin.dto.request.*;
 import com.android.APILogin.dto.response.ResponseData;
 import com.android.APILogin.dto.response.UserResponse;
 import com.android.APILogin.entity.User;
@@ -52,5 +49,16 @@ public class UserController {
     @PostMapping("/verify-otp-for-password-reset")
     public String verifyOtpForPasswordReset(@RequestBody PasswordResetRequest request) {
         return userService.verifyOtpForPasswordReset(request.getEmail(), request.getOtp(), request.getNewPassword());
+    }
+
+    @GetMapping("/shop-detail/{id}")
+    public ResponseData<UserInfoDto> getShopInfo(@PathVariable Long id) {
+        UserInfoDto userInfoDto = userService.getUserInfoByDocId(id);
+        if(userInfoDto == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Not found", userInfoDto);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(), "success", userInfoDto);
+        }
     }
 }

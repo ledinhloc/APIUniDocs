@@ -21,5 +21,5 @@ public class UserDtoRequest {
     private String avatar;
     private LocalDateTime dob;
     private Role role;
-    private Boolean is_active;
+    private Boolean isActive;
 }
