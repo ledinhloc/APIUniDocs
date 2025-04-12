@@ -3,6 +3,11 @@ server:
   servlet:
     context-path: /
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
   datasource:
     url: "jdbc:mysql://localhost:3306/uni_docs"
     username: ${DATASOURCE_NAME:root}
@@ -27,3 +32,7 @@ open:
     description: Mo ta
     serverUrl: http://localhost:8080
     serverName: server
+#duong dan luu file
+external:
+  upload:
+    dir: D:\lt_android\project_nhom\externalUploads
