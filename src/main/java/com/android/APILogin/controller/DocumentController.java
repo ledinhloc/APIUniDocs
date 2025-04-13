@@ -82,4 +82,11 @@ public class DocumentController {
         }
     }
 
+    //tai len tai lieu
+    @PostMapping("/push")
+    public ResponseData<DocumentDto> pushDocument(@RequestBody DocumentDto documentDto) {
+
+        return new ResponseData<>(HttpStatus.OK.value(), "success", documentServiceImpl.pushDocument(documentDto));
+    }
+
 }
