@@ -28,4 +28,8 @@ public class FileChatLine {
     @ManyToOne
     @JoinColumn(name="chatLineId")
     ChatLine chatLine;
+
+    Long size;
+
+    String name="";
 }

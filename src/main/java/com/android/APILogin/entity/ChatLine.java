@@ -26,7 +26,7 @@ public class ChatLine {
     Long chatLineParentId;
 
     @Column(nullable = false)
-    String content;
+    String content = "";
 
     @Enumerated(EnumType.STRING)
     ChatStatus chatStatus;
