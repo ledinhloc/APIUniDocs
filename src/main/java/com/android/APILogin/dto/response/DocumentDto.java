@@ -39,6 +39,12 @@ public class DocumentDto {
         this.sellPrice = sellPrice;
     }
 
+    public DocumentDto(Long docId, Long userId, Long cateId){
+        this.docId = docId;
+        this.userId = userId;
+        this.cateId = cateId;
+    }
+
     public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice, Long totalSold) {
         this.docId = docId;
         this.docName = docName;

@@ -83,4 +83,14 @@ public class DocumentServiceImpl {
                 .collect(Collectors.toList());
     }
 
+    public DocumentDto getUserAndCateByDocId(Long docId) {
+        Optional<DocumentDto> documentOtp = documentRepository.findUserAndCateByDocId(docId);
+        if(documentOtp.isPresent()) {
+            DocumentDto documentDto = documentOtp.get();
+            return documentDto;
+        }
+        else{
+            return null;
+        }
+    }
 }

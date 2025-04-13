@@ -28,6 +28,6 @@ public class Cart {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "doc_id")
+    @JoinColumn(name = "docId")
     Document document;
 }
