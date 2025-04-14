@@ -10,6 +10,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface DocumentMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     DocumentDto toDocumentDto(Document document);
+
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Document toDocument(DocumentDto documentDto);
 }

@@ -13,23 +13,23 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocumentDto {
-    private Long docId;
+    private Long docId;//
     private String docName;
     private String docImageUrl;
     private Double sellPrice;
     private Double originalPrice;
     private Integer docPage;
-    private Integer view;
-    private Integer download;
+    private Integer view;//
+    private Integer download;//
     private String docDesc;
     private DocumentType type;
-    private LocalDateTime createdAt;
-    private Integer maxQuantity;
+    private LocalDateTime createdAt;//
+    private Integer maxQuantity;//so luong còn
     private Long userId;
     private Long cateId;
-    private Long totalSold;
-    private Double avgRate;
-    private Long totalReview;
+    private Long totalSold;//tong luot ban
+    private Double avgRate;//
+    private Long totalReview;//
 
 
     public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice) {

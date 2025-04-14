@@ -82,6 +82,12 @@ public class DocumentController {
         }
     }
 
+    @PostMapping("/push")
+    public ResponseData<DocumentDto> pushDocument(@RequestBody DocumentDto documentDto) {
+
+        return new ResponseData<>(HttpStatus.OK.value(), "success", documentServiceImpl.pushDocument(documentDto));
+    }
+
     @PostMapping("/discount-document")
     public ResponseData<List<DocumentDto>> getDocumentDiscount(@RequestBody List<Long> docIds) {
         List<DocumentDto> documentDto = documentServiceImpl.getUserAndCateByDocId(docIds);
@@ -92,5 +98,4 @@ public class DocumentController {
             return new ResponseData<>(HttpStatus.OK.value(),"document discount",documentDto);
         }
     }
-
 }

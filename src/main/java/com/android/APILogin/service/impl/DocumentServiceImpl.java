@@ -3,11 +3,16 @@ package com.android.APILogin.service.impl;
 import com.android.APILogin.dto.mapper.DocumentImageMapper;
 import com.android.APILogin.dto.response.DocumentDto;
 import com.android.APILogin.dto.response.DocumentImageDto;
+import com.android.APILogin.entity.Category;
 import com.android.APILogin.entity.Document;
 import com.android.APILogin.dto.mapper.DocumentMapper;
 import com.android.APILogin.entity.DocumentImage;
+import com.android.APILogin.entity.User;
+import com.android.APILogin.repository.CategoryRepository;
 import com.android.APILogin.repository.DocumentImageRepository;
 import com.android.APILogin.repository.DocumentRepository;
+import com.android.APILogin.repository.UserRepository;
+import com.android.APILogin.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -18,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class DocumentServiceImpl {
+public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private DocumentRepository documentRepository;
 
@@ -29,6 +34,10 @@ public class DocumentServiceImpl {
     private DocumentMapper documentMapper;
     @Autowired
     private DocumentImageMapper documentImageMapper;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public List<DocumentDto> getAllDocuments() {
         List<DocumentDto> documents = documentRepository.findAllDoc();
@@ -83,7 +92,7 @@ public class DocumentServiceImpl {
                 .collect(Collectors.toList());
     }
 
-    public List<DocumentDto> getUserAndCateByDocId(List<Long> docId) {
+	public List<DocumentDto> getUserAndCateByDocId(List<Long> docId) {
         List<DocumentDto> documents = documentRepository.findUserAndCateByDocIds(docId);
         if(documents == null || documents.isEmpty()) {
             return null;
@@ -91,5 +100,32 @@ public class DocumentServiceImpl {
         else{
             return documents;
         }
+    }
+    public DocumentDto pushDocument(DocumentDto documentDto) {
+        //mapper
+        //Document newDocument = documentMapper.toDocument(documentDto);
+        Document newDocument = new Document();
+        newDocument.setDocName(documentDto.getDocName());
+        newDocument.setDocImageUrl(documentDto.getDocImageUrl());
+        newDocument.setSellPrice(documentDto.getSellPrice());
+        newDocument.setOriginalPrice(documentDto.getOriginalPrice());
+        newDocument.setDocPage(documentDto.getDocPage());
+        newDocument.setDocDesc(documentDto.getDocDesc());
+        newDocument.setType(documentDto.getType());
+        newDocument.setMaxQuantity(documentDto.getMaxQuantity());
+
+        newDocument.setCreatedAt(LocalDateTime.now());
+
+        //set user
+        Optional<User> user = userRepository.findById(documentDto.getUserId());
+        user.ifPresent(newDocument::setUser);
+
+        //set category
+        Optional<Category> categoryOpt = categoryRepository.findById(documentDto.getCateId());
+        categoryOpt.ifPresent(newDocument::setCategory);
+
+        //luu document
+        Document document = documentRepository.save(newDocument);
+        return documentMapper.toDocumentDto(document);
     }
 }
