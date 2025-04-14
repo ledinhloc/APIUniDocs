@@ -82,10 +82,10 @@ public class DocumentController {
         }
     }
 
-    @GetMapping("/discount-document/{docId}")
-    public ResponseData<DocumentDto> getDocumentDiscount(@PathVariable Long docId) {
-        DocumentDto documentDto = documentServiceImpl.getUserAndCateByDocId(docId);
-        if(documentDto == null) {
+    @PostMapping("/discount-document")
+    public ResponseData<List<DocumentDto>> getDocumentDiscount(@RequestBody List<Long> docIds) {
+        List<DocumentDto> documentDto = documentServiceImpl.getUserAndCateByDocId(docIds);
+        if(documentDto == null && documentDto.size() == 0) {
             return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Data not found",documentDto);
         }
         else{

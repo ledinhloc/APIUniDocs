@@ -74,8 +74,8 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "   OR ( :type = 'cate' AND d.category.cateId = :id AND d.docId <> :docId)")
     List<DocumentDto> findDocByTypeAndId(@Param("type") String type, @Param("id")   Long   id, @Param("docId") Long   docId);
 
-    @Query("SELECT new com.android.APILogin.dto.response.DocumentDto("+
+    @Query("SELECT new com.android.APILogin.dto.response.DocumentDto(" +
             "d.docId, d.user.userId, d.category.cateId) " +
-            "FROM Document d WHERE d.docId = :docId")
-    Optional<DocumentDto> findUserAndCateByDocId(@Param("docId") Long docId);
+            "FROM Document d WHERE d.docId IN :docIds")
+    List<DocumentDto> findUserAndCateByDocIds(@Param("docIds") List<Long> docIds);
 }
