@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.userId = :id " +
             "GROUP BY u.userId, u.name, u.address, u.avatar")
     Optional<UserInfoDto> findUserInfoByDocumentId(@Param("id") Long id);
+
+    boolean existsByEmail(@Param("email") String email);
 }

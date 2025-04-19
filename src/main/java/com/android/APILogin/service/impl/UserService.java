@@ -8,6 +8,8 @@ import com.android.APILogin.dto.response.UserResponse;
 import com.android.APILogin.entity.OTP;
 import com.android.APILogin.entity.User;
 import com.android.APILogin.enums.AccountType;
+import com.android.APILogin.enums.UserStatus;
+import com.android.APILogin.repository.OTPRepository;
 import com.android.APILogin.repository.UserRepository;
 import jakarta.persistence.AccessType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -27,6 +31,9 @@ import java.util.Random;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OTPRepository otpRepository;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -57,22 +64,33 @@ public class UserService {
         return userResponse;
     }
 
-    public String createUser(UserDtoRequest userDTO) {
-
+    public OtpRequest createUser(UserDtoRequest userDTO) {
         User newUser = UserMapper.INSTANCE.toEntity(userDTO);
+        newUser.setAddress("");
+        newUser.setPhone("");
+        newUser.setDob(LocalDate.of(2000,1,1));
+        newUser.setStatus(UserStatus.OFFLINE);
+        newUser.setLastOnline(LocalDateTime.now());
+
+        if (newUser.getOtps() == null) {
+            newUser.setOtps(new ArrayList<>());
+        }
 
         // Tạo OTP cho User
         OTP otp = OTP.builder()
                 .otpNum(generateOtp())
                 .otpExpired(LocalDateTime.now().plusMinutes(5)) // OTP hết hạn sau 5 phút
                 .user(newUser)
+                .isActive(true)
                 .build();
+        newUser.getOtps().add(otp);
 
-
-
-        sendOtp(newUser.getEmail(), otp.getOtpNum());
         userRepository.save(newUser);
-        return "Create user successful";
+        sendOtp(newUser.getEmail(), otp.getOtpNum());
+
+        OtpRequest otpRequest = new OtpRequest(newUser.getEmail(), otp.getOtpNum(), otp.getOtpExpired(), otp.getIsActive());
+        return  otpRequest;
+
     }
 
     public String verifyOtpForActivation(OtpRequest otpRequest) {
@@ -81,8 +99,12 @@ public class UserService {
             return "User is not found";
         }
 
-        User user = userOpt.get();
-        OTP otp = user.getOtps().get(0);
+        Optional<OTP> latestOtp = otpRepository.findTopByUserEmailOrderByOtpExpiredDesc(otpRequest.getEmail());
+        if (latestOtp.isEmpty()) {
+            return "No OTP generated for this user";
+        }
+
+        OTP otp = latestOtp.get();
 
         if(otp.getOtpExpired().isBefore(LocalDateTime.now())){
             return "OTP expired";
@@ -92,8 +114,10 @@ public class UserService {
             return "Invalid otp";
         }
 
+        User user = userOpt.get();
         user.setIsActive(true);
         userRepository.save(user);
+
         return "User activated successfully!";
     }
 
@@ -161,5 +185,9 @@ public class UserService {
         }
         UserInfoDto userInfoDto = userOtp.get();
         return userInfoDto;
+    }
+
+    public boolean isEmailExist(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

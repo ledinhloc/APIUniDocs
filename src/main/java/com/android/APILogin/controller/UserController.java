@@ -3,6 +3,7 @@ package com.android.APILogin.controller;
 import com.android.APILogin.dto.request.*;
 import com.android.APILogin.dto.response.ResponseData;
 import com.android.APILogin.dto.response.UserResponse;
+import com.android.APILogin.entity.OTP;
 import com.android.APILogin.entity.User;
 import com.android.APILogin.service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,8 +21,9 @@ public class UserController {
 
     @Operation(summary = "Register a new user", description = "Creates a new user account in the system")
     @PostMapping("/register")
-    public String register(@RequestBody UserDtoRequest userDTO) {
-        return userService.createUser(userDTO);
+    public ResponseData<OtpRequest>  register(@RequestBody UserDtoRequest userDTO) {
+        OtpRequest otpRequest = userService.createUser(userDTO);
+        return new ResponseData<>(HttpStatus.OK.value(), "success", otpRequest);
     }
 
     @Operation(summary = "User login", description = "Allows users to log in using email and password")
@@ -40,8 +42,8 @@ public class UserController {
     @Operation(summary = "Verify OTP for account activation",
             description = "Users enter an OTP code to activate their account after registration")
     @PostMapping("/verify-otp-for-activation")
-    public String verifyOtpForActivation(@RequestBody OtpRequest otpRequest) {
-        return userService.verifyOtpForActivation(otpRequest);
+    public ResponseData<String> verifyOtpForActivation(@RequestBody OtpRequest otpRequest) {
+        return new ResponseData<>(HttpStatus.OK.value(), "success", userService.verifyOtpForActivation(otpRequest));
     }
 
     @Operation(summary = "Verify OTP for password reset",
@@ -59,6 +61,18 @@ public class UserController {
         }
         else{
             return new ResponseData<>(HttpStatus.OK.value(), "success", userInfoDto);
+        }
+    }
+
+    @GetMapping("/check-email")
+    public ResponseData<Boolean> checkEmail(@RequestParam String email) {
+        boolean exists = userService.isEmailExist(email);
+
+        if(exists) {
+            return new ResponseData<>(HttpStatus.OK.value(), "Email exist", exists);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Email not exist", exists);
         }
     }
 }

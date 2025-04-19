@@ -38,19 +38,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate dob;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(255) default ''")
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(500) default ''")
     private String address;
 
     @Column(nullable = false)
     private Boolean isActive;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime lastOnline;
 
     @Enumerated(EnumType.STRING)
