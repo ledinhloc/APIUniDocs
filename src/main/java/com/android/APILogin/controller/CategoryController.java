@@ -33,4 +33,15 @@ public class CategoryController {
             return new ResponseData<>(HttpStatus.OK.value(), "category found", categoryDto);
         }
     }
+    @GetMapping("/by-user/{userId}")
+    public ResponseData<List<CategoryDto>> getByUser(@PathVariable Long userId) {
+       List<CategoryDto> categoryDtos = categoryService.getCategoriesByUser(userId);
+       if(categoryDtos == null) {
+           return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "category not found", categoryDtos);
+       }
+       else{
+           return new ResponseData<>(HttpStatus.OK.value(), "category found", categoryDtos);
+       }
+
+    }
 }

@@ -34,4 +34,27 @@ public class CategoryService {
         }
         return categoryMapper.toCategoryDto(categoryOtp.get());
     }
+
+    public List<CategoryDto> getCategoriesByUser(Long userId) {
+        List<Category> categories = categoryRepository.findByDocumentUserId(userId);
+
+        return categories.stream().map(c -> {
+                    List<DocumentDto> docs = c.getDocuments().stream()
+                            .filter(d -> d.getUser().getUserId().equals(userId))
+                            .map(d -> new DocumentDto(
+                                    d.getDocId(),
+                                    d.getDocName(),
+                                    d.getDocImageUrl()
+                            ))
+                            .collect(Collectors.toList());
+
+                    return new CategoryDto(
+                            c.getCateId(),
+                            c.getCateName(),
+                            c.getCateIcon(),
+                            docs
+                    );
+                })
+                .collect(Collectors.toList());
+    }
 }

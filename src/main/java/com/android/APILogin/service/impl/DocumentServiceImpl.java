@@ -14,6 +14,9 @@ import com.android.APILogin.repository.DocumentRepository;
 import com.android.APILogin.repository.UserRepository;
 import com.android.APILogin.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
@@ -127,5 +130,34 @@ public class DocumentServiceImpl implements DocumentService {
         //luu document
         Document document = documentRepository.save(newDocument);
         return documentMapper.toDocumentDto(document);
+    }
+
+    public List<DocumentDto> getTopNDocuments(Long userId, int n) {
+        Pageable page = PageRequest.of(0, n, Sort.by("docId").descending());
+        return documentRepository.findByUserWithLimit(userId, page);
+    }
+
+    public List<DocumentDto> findAllDocByUserId(Long userId) {
+        List<DocumentDto> documents = documentRepository.findAllDocumentByUserId(userId);
+        if(documents.isEmpty()) {
+            return null;
+        }
+        else{
+            return documents.stream()
+                    .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public List<DocumentDto> findAllByUserAndTypeSort(@Param("userId") Long userId,@Param("typeSort") String typeSort){
+        List<DocumentDto> documents = documentRepository.findByUserAndTypeSort(userId,typeSort);
+        if(documents.isEmpty()) {
+            return null;
+        }
+        else{
+            return documents.stream()
+                    .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
+                    .collect(Collectors.toList());
+        }
     }
 }

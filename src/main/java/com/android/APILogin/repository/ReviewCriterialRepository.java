@@ -13,7 +13,7 @@ public interface ReviewCriterialRepository extends JpaRepository<ReviewCriterial
     @Query(value = "SELECT NEW com.android.APILogin.dto.request.ReviewCriterialDto(" +
             "rc.id, rc.content, ec.name) " +
             "FROM ReviewCriterial rc " +
-            "JOIN EvaluationCriteria ec ON rc.evaluationCriteria.id = ec.id " +
+            "JOIN EvaluationCriteria ec ON rc.evaluationCriteria.criteriaId = ec.criteriaId " +
             "WHERE rc.review.reviewId = :reviewId")
     List<ReviewCriterialDto> findCriterialByReviewId(@Param("reviewId") Long reviewId);
 }

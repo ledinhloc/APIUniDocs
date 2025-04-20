@@ -98,4 +98,38 @@ public class DocumentController {
             return new ResponseData<>(HttpStatus.OK.value(),"document discount",documentDto);
         }
     }
+
+    @GetMapping("/top-document/{userId}/{num}")
+    public ResponseData<List<DocumentDto>> getTopDocument(@PathVariable Long userId, @PathVariable Integer num) {
+        List<DocumentDto> documentDtos = documentServiceImpl.getTopNDocuments(userId, num);
+        if(documentDtos == null) {
+            return new ResponseData<>(HttpStatus.OK.value(),"Data not found",documentDtos);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(),"top document",documentDtos);
+        }
+    }
+
+    @GetMapping("shop-detail/all-by/{userId}")
+    public ResponseData<List<DocumentDto>> getShopDetailAll(@PathVariable Long userId) {
+        List<DocumentDto> documentDtos = documentServiceImpl.findAllDocByUserId(userId);
+        if(documentDtos == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Data not found",documentDtos);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(),"shop detail",documentDtos);
+        }
+
+    }
+
+    @GetMapping("filter-shop/{sortType}/{userId}")
+    public ResponseData<List<DocumentDto>> filterDocumentSellPrice(@PathVariable String sortType, @PathVariable Long userId) {
+        List<DocumentDto> listDocument = documentServiceImpl.findAllByUserAndTypeSort(userId, sortType);
+        if(listDocument == null || listDocument.size() == 0) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Data not found",listDocument);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(),"list document shop filter",listDocument);
+        }
+    }
 }

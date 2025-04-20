@@ -45,6 +45,12 @@ public class DocumentDto {
         this.cateId = cateId;
     }
 
+    public DocumentDto(Long docId, String docName, String docImageUrl){
+        this.docId = docId;
+        this.docName = docName;
+        this.docImageUrl = docImageUrl;
+    }
+
     public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice, Long totalSold) {
         this.docId = docId;
         this.docName = docName;
@@ -58,6 +64,16 @@ public class DocumentDto {
         this.docName = docName;
         this.docImageUrl = docImageUrl;
         this.sellPrice = sellPrice;
+        this.totalSold = totalSold;
+        this.avgRate = avgRate;
+    }
+
+    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice,Long userId, Long totalSold, Double avgRate) {
+        this.docId = docId;
+        this.docName = docName;
+        this.docImageUrl = docImageUrl;
+        this.sellPrice = sellPrice;
+        this.userId = userId;
         this.totalSold = totalSold;
         this.avgRate = avgRate;
     }
