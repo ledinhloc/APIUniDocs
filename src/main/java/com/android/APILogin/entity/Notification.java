@@ -1,5 +1,6 @@
 package com.android.APILogin.entity;
 
+import com.android.APILogin.enums.NotificationType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,20 +24,21 @@ public class Notification {
     Long notiId;
 
     @Column(nullable = false)
-    private String title;
+    String title;
 
     @Column(nullable = false)
-    private String content;
+    String content;
 
     @Column(nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    NotificationType type;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "notification")
-    private List<UserNotifi> userNotifis;
+    List<UserNotifi> userNotifis;
 
 }
