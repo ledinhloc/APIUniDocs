@@ -2,14 +2,10 @@ package com.android.APILogin.controller;
 
 import com.android.APILogin.dto.request.DiscountDto;
 import com.android.APILogin.dto.response.ResponseData;
-import com.android.APILogin.enums.Scope;
-import com.android.APILogin.service.impl.DiscountServiceImpl;
+import com.android.APILogin.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,14 +13,14 @@ import java.util.List;
 @RequestMapping("api/discount")
 public class DiscountController {
     @Autowired
-    private DiscountServiceImpl discountServiceImpl;
+    private DiscountService discountService;
 
     @GetMapping("/scope")
     public ResponseData<List<DiscountDto>> getDiscountByScope(
             @RequestParam(required = false) List<Long> userIds,
             @RequestParam(required = false) List<Long> categoryIds,
             @RequestParam(required = false) List<Long> documentIds){
-        List<DiscountDto> discounts = discountServiceImpl.findByScopeAndScopeId(
+        List<DiscountDto> discounts = discountService.findByScopeAndScopeId(
                 userIds != null ? userIds : List.of(),
                 categoryIds != null ? categoryIds : List.of(),
                 documentIds != null ? documentIds : List.of()
@@ -35,5 +31,11 @@ public class DiscountController {
         else{
             return new ResponseData<>(HttpStatus.OK.value(), "Found discount", discounts);
         }
+    }
+
+    @PostMapping("/{userId}/addDiscount")
+    public ResponseData<Long> addDiscount(@PathVariable Long userId,@RequestBody DiscountDto discountDto){
+        Long discountId =  discountService.addDiscount(discountDto, userId);
+        return new ResponseData<>(HttpStatus.OK.value(), "Added discount",discountId);
     }
 }
