@@ -34,9 +34,13 @@ public class UserController {
 
     @Operation(summary = "Forgot password", description = "Sends a password reset request to the user's email")
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email) {
+    public ResponseData<OtpRequest> forgotPassword(@RequestParam String email, @RequestParam String phoneNumber) {
         System.out.println(email);
-        return userService.forgotPassword(email);
+        OtpRequest otpRequest = userService.forgotPassword(email,phoneNumber);
+        if(otpRequest == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Not found", otpRequest);
+        }
+        return new ResponseData<>(HttpStatus.OK.value(), "success", otpRequest);
     }
 
     @Operation(summary = "Verify OTP for account activation",
@@ -49,8 +53,8 @@ public class UserController {
     @Operation(summary = "Verify OTP for password reset",
             description = "Users enter an OTP code to reset their password")
     @PostMapping("/verify-otp-for-password-reset")
-    public String verifyOtpForPasswordReset(@RequestBody PasswordResetRequest request) {
-        return userService.verifyOtpForPasswordReset(request.getEmail(), request.getOtp(), request.getNewPassword());
+    public ResponseData<String> verifyOtpForPasswordReset(@RequestBody PasswordResetRequest request) {
+        return new ResponseData<>(HttpStatus.OK.value(), "success", userService.verifyOtpForPasswordReset(request));
     }
 
     @GetMapping("/shop-detail/{id}")
@@ -74,5 +78,10 @@ public class UserController {
         else{
             return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Email not exist", exists);
         }
+    }
+
+    @PostMapping("/check-otp")
+    public ResponseData<String> checkOtp(@RequestBody OtpRequest otpRequest) {
+        return new ResponseData<>(HttpStatus.OK.value(), "Email exist", userService.checkOtp(otpRequest));
     }
 }

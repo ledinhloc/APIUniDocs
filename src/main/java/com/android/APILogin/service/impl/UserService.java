@@ -2,6 +2,7 @@ package com.android.APILogin.service.impl;
 
 import com.android.APILogin.dto.mapper.UserMapper;
 import com.android.APILogin.dto.request.OtpRequest;
+import com.android.APILogin.dto.request.PasswordResetRequest;
 import com.android.APILogin.dto.request.UserDtoRequest;
 import com.android.APILogin.dto.request.UserInfoDto;
 import com.android.APILogin.dto.response.UserResponse;
@@ -71,54 +72,58 @@ public class UserService {
         newUser.setDob(LocalDate.of(2000,1,1));
         newUser.setStatus(UserStatus.OFFLINE);
         newUser.setLastOnline(LocalDateTime.now());
+        newUser.setType(userDTO.getType());
 
         if (newUser.getOtps() == null) {
             newUser.setOtps(new ArrayList<>());
         }
 
-        // Tạo OTP cho User
-        OTP otp = OTP.builder()
-                .otpNum(generateOtp())
-                .otpExpired(LocalDateTime.now().plusMinutes(5)) // OTP hết hạn sau 5 phút
-                .user(newUser)
-                .isActive(true)
-                .build();
-        newUser.getOtps().add(otp);
+        // Xử lý riêng cho tài khoản Google
+        if (newUser.getType() == AccountType.GOOGLE) {
+            newUser.setIsActive(true); // Tự động kích hoạt
+            newUser.setPassword("google_auth"); // Đặt password mặc định
 
-        userRepository.save(newUser);
-        sendOtp(newUser.getEmail(), otp.getOtpNum());
+            userRepository.save(newUser);
+            return null;
+        }
+        else{
+            newUser.setType(AccountType.NORMAL);
+            newUser.setIsActive(false);
+            newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
-        OtpRequest otpRequest = new OtpRequest(newUser.getEmail(), otp.getOtpNum(), otp.getOtpExpired(), otp.getIsActive());
-        return  otpRequest;
+            // Tạo OTP cho User
+            OTP otp = OTP.builder()
+                    .otpNum(generateOtp())
+                    .otpExpired(LocalDateTime.now().plusMinutes(5)) // OTP hết hạn sau 5 phút
+                    .user(newUser)
+                    .isActive(true)
+                    .build();
+            newUser.getOtps().add(otp);
+
+            userRepository.save(newUser);
+            sendOtp(newUser.getEmail(), otp.getOtpNum());
+
+            OtpRequest otpRequest = new OtpRequest(newUser.getEmail(), otp.getOtpNum(), otp.getOtpExpired(), otp.getIsActive());
+            return  otpRequest;
+
+        }
 
     }
 
     public String verifyOtpForActivation(OtpRequest otpRequest) {
         Optional<User> userOpt = userRepository.findByEmail(otpRequest.getEmail());
+        String msg="";
         if(userOpt.isEmpty()) {
-            return "User is not found";
+            msg = "User is not found";
         }
 
-        Optional<OTP> latestOtp = otpRepository.findTopByUserEmailOrderByOtpExpiredDesc(otpRequest.getEmail());
-        if (latestOtp.isEmpty()) {
-            return "No OTP generated for this user";
-        }
-
-        OTP otp = latestOtp.get();
-
-        if(otp.getOtpExpired().isBefore(LocalDateTime.now())){
-            return "OTP expired";
-        }
-
-        if(!otp.getOtpNum().equals(otpRequest.getOtp())) {
-            return "Invalid otp";
-        }
+        msg = checkOtp(otpRequest);
 
         User user = userOpt.get();
         user.setIsActive(true);
         userRepository.save(user);
 
-        return "User activated successfully!";
+        return msg;
     }
 
     public String generateOtp() {
@@ -136,10 +141,10 @@ public class UserService {
         return true;
     };
 
-    public String forgotPassword(String email) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
+    public OtpRequest forgotPassword(String email, String phoneNumber) {
+        Optional<User> userOpt = userRepository.findByEmailAndPhone(email, phoneNumber);
         if(userOpt.isEmpty()) {
-            return "User not found";
+            return null;
         }
 
         //tạo otp
@@ -148,35 +153,29 @@ public class UserService {
                 .otpNum(generateOtp())
                 .otpExpired(LocalDateTime.now().plusMinutes(5))
                 .user(user)
+                .isActive(true)
                 .build();
-        user.setOtps(List.of(otp));
+        user.getOtps().add(otp);
 
         sendOtp(user.getEmail(), otp.getOtpNum());
         userRepository.save(user);
-        return "Otp sent for reset password";
+        OtpRequest otpRequest = new OtpRequest(user.getEmail(), otp.getOtpNum(), otp.getOtpExpired(), otp.getIsActive());
+        return  otpRequest;
     }
 
-    public String verifyOtpForPasswordReset(String email, String otp, String newPassword) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
+    public String verifyOtpForPasswordReset(PasswordResetRequest request) {
+        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+        String msg="Successfully";
         if(userOpt.isEmpty()) {
-            return "User not found";
+            msg= "User is not found";
         }
-
         User user = userOpt.get();
-        OTP otpEntity = user.getOtps().get(0);
-
-        if(otpEntity.getOtpExpired().isBefore(LocalDateTime.now())){
-            return "OTP expired";
-        }
-
-        if(! otpEntity.getOtpNum().equals(otp)){
-            return "Invalid otp";
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-        return "Password reset successful";
+
+        return msg;
     }
+
 
     public UserInfoDto getUserInfoByDocId(Long docId){
         Optional<UserInfoDto> userOtp = userRepository.findUserInfoByDocumentId(docId);
@@ -190,4 +189,24 @@ public class UserService {
     public boolean isEmailExist(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    public String checkOtp(OtpRequest otpRequest){
+        Optional<OTP> latestOtp = otpRepository.findTopByUserEmailOrderByOtpExpiredDesc(otpRequest.getEmail());
+        if (latestOtp.isEmpty()) {
+            return "No OTP generated for this user";
+        }
+
+        OTP otp = latestOtp.get();
+
+        if(otp.getOtpExpired().isBefore(LocalDateTime.now())){
+            return "OTP expired";
+        }
+
+        if(!otp.getOtpNum().equals(otpRequest.getOtp())) {
+            return "Invalid otp";
+        }
+
+        return "Successfully";
+    }
+
 }

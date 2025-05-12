@@ -1,5 +1,6 @@
 package com.android.APILogin.dto.request;
 
+import com.android.APILogin.enums.AccountType;
 import com.android.APILogin.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,4 +20,6 @@ public class UserDtoRequest {
     private String avatar;
     private Role role;
     private Boolean isActive;
+    private String phoneNumber;
+    private AccountType type;
 }

@@ -26,4 +26,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<UserInfoDto> findUserInfoByDocumentId(@Param("id") Long id);
 
     boolean existsByEmail(@Param("email") String email);
+
+    Optional<User> findByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
 }
