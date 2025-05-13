@@ -12,6 +12,7 @@ import com.android.APILogin.enums.AccountType;
 import com.android.APILogin.enums.UserStatus;
 import com.android.APILogin.repository.OTPRepository;
 import com.android.APILogin.repository.UserRepository;
+import com.android.APILogin.service.CloudinaryService;
 import jakarta.persistence.AccessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +42,9 @@ public class UserService {
     private JavaMailSender mailSender;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     public UserResponse loginUser(String email, String password) {
         Optional<User> userOpt = userRepository.findByEmail(email);
@@ -207,6 +212,54 @@ public class UserService {
         }
 
         return "Successfully";
+    }
+
+    public UserDtoRequest getUserById(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if(userOpt.isEmpty()) {
+            return null;
+        }
+        User user = userOpt.get();
+        UserDtoRequest userDtoRequest = new UserDtoRequest(user.getName(),user.getEmail(),user.getAvatar(),
+                user.getPhone(),user.getAddress(),user.getGender(),user.getDob());
+        return userDtoRequest;
+    }
+
+    public UserResponse getUserByEmail(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if(userOpt.isEmpty()) {
+            return null;
+        }
+        User user = userOpt.get();
+        UserResponse userResponse = new UserResponse(user.getUserId(),user.getName(),user.getEmail(),user.getAvatar());
+        return userResponse;
+    }
+
+    public UserDtoRequest updateUserInfoDetail(UserDtoRequest userDtoRequest) {
+        Optional<User> userOpt = userRepository.findByEmail(userDtoRequest.getEmail());
+        if (userOpt.isEmpty()) {
+            return null;
+        }
+
+        User user = userOpt.get();
+        // Cập nhật các trường cần thiết
+        user.setName(userDtoRequest.getName());
+        user.setAvatar(userDtoRequest.getAvatar());
+        user.setGender(userDtoRequest.getGender());
+        user.setDob(userDtoRequest.getDob());
+        user.setPhone(userDtoRequest.getPhoneNumber());
+        user.setAddress(userDtoRequest.getAddress());
+
+        // Lưu lại
+        userRepository.save(user);
+
+        // Chuyển về DTO và trả về
+        return UserMapper.INSTANCE.toDTO(user);
+    }
+
+    public String uploadFile(MultipartFile file) {
+        String url = cloudinaryService.uploadFile(file, "avatars");
+        return url;
     }
 
 }
