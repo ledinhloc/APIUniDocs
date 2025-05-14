@@ -2,6 +2,7 @@ package com.android.APILogin.service.impl;
 
 import com.android.APILogin.dto.mapper.UserMapper;
 import com.android.APILogin.dto.request.OtpRequest;
+import com.android.APILogin.dto.request.PasswordResetRequest;
 import com.android.APILogin.dto.request.UserDtoRequest;
 import com.android.APILogin.dto.request.UserInfoDto;
 import com.android.APILogin.dto.response.UserResponse;
@@ -11,6 +12,7 @@ import com.android.APILogin.enums.AccountType;
 import com.android.APILogin.enums.UserStatus;
 import com.android.APILogin.repository.OTPRepository;
 import com.android.APILogin.repository.UserRepository;
+import com.android.APILogin.service.CloudinaryService;
 import jakarta.persistence.AccessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +42,9 @@ public class UserService {
     private JavaMailSender mailSender;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     public UserResponse loginUser(String email, String password) {
         Optional<User> userOpt = userRepository.findByEmail(email);
@@ -71,54 +77,58 @@ public class UserService {
         newUser.setDob(LocalDate.of(2000,1,1));
         newUser.setStatus(UserStatus.OFFLINE);
         newUser.setLastOnline(LocalDateTime.now());
+        newUser.setType(userDTO.getType());
 
         if (newUser.getOtps() == null) {
             newUser.setOtps(new ArrayList<>());
         }
 
-        // Tạo OTP cho User
-        OTP otp = OTP.builder()
-                .otpNum(generateOtp())
-                .otpExpired(LocalDateTime.now().plusMinutes(5)) // OTP hết hạn sau 5 phút
-                .user(newUser)
-                .isActive(true)
-                .build();
-        newUser.getOtps().add(otp);
+        // Xử lý riêng cho tài khoản Google
+        if (newUser.getType() == AccountType.GOOGLE) {
+            newUser.setIsActive(true); // Tự động kích hoạt
+            newUser.setPassword("google_auth"); // Đặt password mặc định
 
-        userRepository.save(newUser);
-        sendOtp(newUser.getEmail(), otp.getOtpNum());
+            userRepository.save(newUser);
+            return null;
+        }
+        else{
+            newUser.setType(AccountType.NORMAL);
+            newUser.setIsActive(false);
+            newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
-        OtpRequest otpRequest = new OtpRequest(newUser.getEmail(), otp.getOtpNum(), otp.getOtpExpired(), otp.getIsActive());
-        return  otpRequest;
+            // Tạo OTP cho User
+            OTP otp = OTP.builder()
+                    .otpNum(generateOtp())
+                    .otpExpired(LocalDateTime.now().plusMinutes(5)) // OTP hết hạn sau 5 phút
+                    .user(newUser)
+                    .isActive(true)
+                    .build();
+            newUser.getOtps().add(otp);
+
+            userRepository.save(newUser);
+            sendOtp(newUser.getEmail(), otp.getOtpNum());
+
+            OtpRequest otpRequest = new OtpRequest(newUser.getEmail(), otp.getOtpNum(), otp.getOtpExpired(), otp.getIsActive());
+            return  otpRequest;
+
+        }
 
     }
 
     public String verifyOtpForActivation(OtpRequest otpRequest) {
         Optional<User> userOpt = userRepository.findByEmail(otpRequest.getEmail());
+        String msg="";
         if(userOpt.isEmpty()) {
-            return "User is not found";
+            msg = "User is not found";
         }
 
-        Optional<OTP> latestOtp = otpRepository.findTopByUserEmailOrderByOtpExpiredDesc(otpRequest.getEmail());
-        if (latestOtp.isEmpty()) {
-            return "No OTP generated for this user";
-        }
-
-        OTP otp = latestOtp.get();
-
-        if(otp.getOtpExpired().isBefore(LocalDateTime.now())){
-            return "OTP expired";
-        }
-
-        if(!otp.getOtpNum().equals(otpRequest.getOtp())) {
-            return "Invalid otp";
-        }
+        msg = checkOtp(otpRequest);
 
         User user = userOpt.get();
         user.setIsActive(true);
         userRepository.save(user);
 
-        return "User activated successfully!";
+        return msg;
     }
 
     public String generateOtp() {
@@ -136,10 +146,10 @@ public class UserService {
         return true;
     };
 
-    public String forgotPassword(String email) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
+    public OtpRequest forgotPassword(String email, String phoneNumber) {
+        Optional<User> userOpt = userRepository.findByEmailAndPhone(email, phoneNumber);
         if(userOpt.isEmpty()) {
-            return "User not found";
+            return null;
         }
 
         //tạo otp
@@ -148,35 +158,29 @@ public class UserService {
                 .otpNum(generateOtp())
                 .otpExpired(LocalDateTime.now().plusMinutes(5))
                 .user(user)
+                .isActive(true)
                 .build();
-        user.setOtps(List.of(otp));
+        user.getOtps().add(otp);
 
         sendOtp(user.getEmail(), otp.getOtpNum());
         userRepository.save(user);
-        return "Otp sent for reset password";
+        OtpRequest otpRequest = new OtpRequest(user.getEmail(), otp.getOtpNum(), otp.getOtpExpired(), otp.getIsActive());
+        return  otpRequest;
     }
 
-    public String verifyOtpForPasswordReset(String email, String otp, String newPassword) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
+    public String verifyOtpForPasswordReset(PasswordResetRequest request) {
+        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+        String msg="Successfully";
         if(userOpt.isEmpty()) {
-            return "User not found";
+            msg= "User is not found";
         }
-
         User user = userOpt.get();
-        OTP otpEntity = user.getOtps().get(0);
-
-        if(otpEntity.getOtpExpired().isBefore(LocalDateTime.now())){
-            return "OTP expired";
-        }
-
-        if(! otpEntity.getOtpNum().equals(otp)){
-            return "Invalid otp";
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-        return "Password reset successful";
+
+        return msg;
     }
+
 
     public UserInfoDto getUserInfoByDocId(Long docId){
         Optional<UserInfoDto> userOtp = userRepository.findUserInfoByDocumentId(docId);
@@ -190,4 +194,72 @@ public class UserService {
     public boolean isEmailExist(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    public String checkOtp(OtpRequest otpRequest){
+        Optional<OTP> latestOtp = otpRepository.findTopByUserEmailOrderByOtpExpiredDesc(otpRequest.getEmail());
+        if (latestOtp.isEmpty()) {
+            return "No OTP generated for this user";
+        }
+
+        OTP otp = latestOtp.get();
+
+        if(otp.getOtpExpired().isBefore(LocalDateTime.now())){
+            return "OTP expired";
+        }
+
+        if(!otp.getOtpNum().equals(otpRequest.getOtp())) {
+            return "Invalid otp";
+        }
+
+        return "Successfully";
+    }
+
+    public UserDtoRequest getUserById(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if(userOpt.isEmpty()) {
+            return null;
+        }
+        User user = userOpt.get();
+        UserDtoRequest userDtoRequest = new UserDtoRequest(user.getName(),user.getEmail(),user.getAvatar(),
+                user.getPhone(),user.getAddress(),user.getGender(),user.getDob());
+        return userDtoRequest;
+    }
+
+    public UserResponse getUserByEmail(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if(userOpt.isEmpty()) {
+            return null;
+        }
+        User user = userOpt.get();
+        UserResponse userResponse = new UserResponse(user.getUserId(),user.getName(),user.getEmail(),user.getAvatar());
+        return userResponse;
+    }
+
+    public UserDtoRequest updateUserInfoDetail(UserDtoRequest userDtoRequest) {
+        Optional<User> userOpt = userRepository.findByEmail(userDtoRequest.getEmail());
+        if (userOpt.isEmpty()) {
+            return null;
+        }
+
+        User user = userOpt.get();
+        // Cập nhật các trường cần thiết
+        user.setName(userDtoRequest.getName());
+        user.setAvatar(userDtoRequest.getAvatar());
+        user.setGender(userDtoRequest.getGender());
+        user.setDob(userDtoRequest.getDob());
+        user.setPhone(userDtoRequest.getPhoneNumber());
+        user.setAddress(userDtoRequest.getAddress());
+
+        // Lưu lại
+        userRepository.save(user);
+
+        // Chuyển về DTO và trả về
+        return UserMapper.INSTANCE.toDTO(user);
+    }
+
+    public String uploadFile(MultipartFile file) {
+        String url = cloudinaryService.uploadFile(file, "avatars");
+        return url;
+    }
+
 }

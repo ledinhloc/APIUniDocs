@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/user")
@@ -34,9 +35,13 @@ public class UserController {
 
     @Operation(summary = "Forgot password", description = "Sends a password reset request to the user's email")
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email) {
+    public ResponseData<OtpRequest> forgotPassword(@RequestParam String email, @RequestParam String phoneNumber) {
         System.out.println(email);
-        return userService.forgotPassword(email);
+        OtpRequest otpRequest = userService.forgotPassword(email,phoneNumber);
+        if(otpRequest == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Not found", otpRequest);
+        }
+        return new ResponseData<>(HttpStatus.OK.value(), "success", otpRequest);
     }
 
     @Operation(summary = "Verify OTP for account activation",
@@ -49,8 +54,8 @@ public class UserController {
     @Operation(summary = "Verify OTP for password reset",
             description = "Users enter an OTP code to reset their password")
     @PostMapping("/verify-otp-for-password-reset")
-    public String verifyOtpForPasswordReset(@RequestBody PasswordResetRequest request) {
-        return userService.verifyOtpForPasswordReset(request.getEmail(), request.getOtp(), request.getNewPassword());
+    public ResponseData<String> verifyOtpForPasswordReset(@RequestBody PasswordResetRequest request) {
+        return new ResponseData<>(HttpStatus.OK.value(), "success", userService.verifyOtpForPasswordReset(request));
     }
 
     @GetMapping("/shop-detail/{id}")
@@ -74,5 +79,52 @@ public class UserController {
         else{
             return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Email not exist", exists);
         }
+    }
+
+    @PostMapping("/check-otp")
+    public ResponseData<String> checkOtp(@RequestBody OtpRequest otpRequest) {
+        return new ResponseData<>(HttpStatus.OK.value(), "Email exist", userService.checkOtp(otpRequest));
+    }
+
+    @GetMapping("/get-by-id/{userId}")
+    public ResponseData<UserDtoRequest> getUser(@PathVariable Long userId) {
+        UserDtoRequest userDtoRequest = userService.getUserById(userId);
+        if(userDtoRequest == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Not found", userDtoRequest);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(), "success", userDtoRequest);
+        }
+    }
+
+    @GetMapping("/get-by-email/{email}")
+    public ResponseData<UserResponse> getUserByEmail(@PathVariable String email) {
+        UserResponse userResponse = userService.getUserByEmail(email);
+        if(userResponse == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Not found", userResponse);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(), "success", userResponse);
+        }
+    }
+
+    @PostMapping("/update-user")
+    public ResponseData<UserDtoRequest> updateUser(@RequestBody UserDtoRequest userDtoRequest) {
+        UserDtoRequest user = userService.updateUserInfoDetail(userDtoRequest);
+        if(user == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Not found", user);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(), "success", user);
+        }
+    }
+
+    @PostMapping("/upload-avatar")
+    public ResponseData<String> uploadAvatar(@RequestParam("file") MultipartFile file) {
+        String url = userService.uploadFile(file);
+        if(url == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Not found", url);
+        }
+        return new ResponseData<>(HttpStatus.OK.value(), "Success", url);
     }
 }

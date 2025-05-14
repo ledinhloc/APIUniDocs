@@ -1,5 +1,6 @@
 package com.android.APILogin.entity;
 
+import com.android.APILogin.enums.AccountType;
 import com.android.APILogin.enums.Role;
 import com.android.APILogin.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -58,6 +59,9 @@ public class User {
 
     private String avatar;
     private String gender;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)

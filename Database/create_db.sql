@@ -1,10 +1,10 @@
 use uni_docs;
 -- 1. User (Thêm vai trò sinh viên, giảng viên)
-INSERT INTO `user` (`user_id`, `address`, `avatar`, `dob`, `email`, `gender`, `is_active`, `last_online`, `name`, `password`, `phone`, `role`, `status`) VALUES
-                                                                                                                                                             (1, '227 Nguyễn Văn Cừ, Q.5', 'avatar1.jpg', '2000-05-15', '2150001@student.hcmus.edu.vn', 'Male', b'1', NOW(), 'Nguyễn Văn A', 'sv123', '0912345678', 'USER', 'ONLINE'),
-                                                                                                                                                             (2, 'Phòng 201 KTX ĐH Bách Khoa', 'avatar2.png', '2001-02-20', '2150002@student.hcmus.edu.vn', 'Female', b'1', NOW(), 'Trần Thị B', 'sv456', '0987654321', 'USER', 'ONLINE'),
-                                                                                                                                                             (3, 'Khoa CNTT - ĐH KHTN', 'avatar_prof.jpg', '1980-11-10', 'prof.long@hcmus.edu.vn', 'Male', b'1', NOW(), 'GS. Trần Văn Long', 'gv123', '0903123456', 'USER', 'OFFLINE'),
-                                                                                                                                                             (4, 'Phòng 101 Nhà Điều Hành', 'admin.png', '1990-07-01', 'admin@uni.com', 'Female', b'1', NOW(), 'Quản Trị Viên', 'admin123', '0283822101', 'ADMIN', 'ONLINE');
+INSERT INTO `user` (`user_id`, `address`, `avatar`, `dob`, `email`, `gender`, `is_active`, `last_online`, `name`, `password`, `phone`, `role`, `status`, `type`) VALUES
+                                                                                                                                                             (1, '227 Nguyễn Văn Cừ, Q.5', 'avatar1.jpg', '2000-05-15', '2150001@student.hcmus.edu.vn', 'Male', b'1', NOW(), 'Nguyễn Văn A', 'sv123', '0912345678', 'USER', 'ONLINE', 'NORMAL'),
+                                                                                                                                                             (2, 'Phòng 201 KTX ĐH Bách Khoa', 'avatar2.png', '2001-02-20', '2150002@student.hcmus.edu.vn', 'Female', b'1', NOW(), 'Trần Thị B', 'sv456', '0987654321', 'USER', 'ONLINE', 'NORMAL'),
+                                                                                                                                                             (3, 'Khoa CNTT - ĐH KHTN', 'avatar_prof.jpg', '1980-11-10', 'prof.long@hcmus.edu.vn', 'Male', b'1', NOW(), 'GS. Trần Văn Long', 'gv123', '0903123456', 'USER', 'OFFLINE', 'NORMAL'),
+                                                                                                                                                             (4, 'Phòng 101 Nhà Điều Hành', 'admin.png', '1990-07-01', 'admin@uni.com', 'Female', b'1', NOW(), 'Quản Trị Viên', 'admin123', '0283822101', 'ADMIN', 'ONLINE', 'NORMAL');
 
 -- 2. Category (Chuyên ngành đại học)
 INSERT INTO `category` (`cate_id`, `cate_desc`, `cate_icon`, `cate_name`) VALUES
@@ -107,8 +107,8 @@ INSERT INTO `file_document` (`file_id`, `file_type`, `file_url`, `doc_id`) VALUE
 -- 16. Notification (Thông báo từ hệ thống)
 INSERT INTO `notification` (`noti_id`, `content`, `created_at`, `title`, `type`) VALUES
                                                                                      (1, 'Đơn hàng #001 đã sẵn sàng', NOW(), 'Tải xuống thành công', 'DOWNLOAD'),
-                                                                                     (2, 'Bạn có tin nhắn mới từ GS. Long', NOW(), 'Tin nhắn mới', 'MESSAGE'),
-                                                                                     (3, 'Tài liệu Toán A1 vừa cập nhật', NOW(), 'Tài liệu mới', 'UPDATE'),
+                                                                                     (2, 'Bạn có tin nhắn mới từ GS. Long', NOW(), 'Tin nhắn mới', 'CHAT'),
+                                                                                     (3, 'Tài liệu Toán A1 vừa cập nhật', NOW(), 'Tài liệu mới', 'CART'),
                                                                                      (4, 'Áp dụng mã GIAMGIA20', NOW(), 'Khuyến mãi', 'PROMOTION');
 
 -- 17. User Notifi (Trạng thái đọc)
@@ -126,11 +126,11 @@ INSERT INTO `otp` (`otp_id`, `is_active`, `otp_expired`, `otp_num`, `user_id`) V
                                                                                    (4, b'1', DATE_ADD(NOW(), INTERVAL 7 MINUTE), '409567', 4);
 
 -- 1. User (Thêm sinh viên và giảng viên)
-INSERT INTO `user` (`user_id`, `address`, `avatar`, `dob`, `email`, `gender`, `is_active`, `last_online`, `name`, `password`, `phone`, `role`, `status`) VALUES
-                                                                                                                                                             (5, 'KTX Khu A ĐHQG', 'avatar5.jpg', '2002-09-03', '2150003@student.hcmus.edu.vn', 'Female', b'1', NOW(), 'Lê Thị C', 'sv789', '0911222333', 'USER', 'ONLINE'),
-                                                                                                                                                             (6, 'Khoa Toán - ĐH KHTN', 'avatar_prof2.jpg', '1975-08-12', 'prof.hien@hcmus.edu.vn', 'Female', b'1', NOW(), 'PGS. Nguyễn Thị Hiền', 'gv456', '0909988776', 'USER', 'OFFLINE'),
-                                                                                                                                                             (7, '123 Lý Thường Kiệt', 'avatar7.png', '2000-12-25', '2150004@student.hcmus.edu.vn', 'Male', b'1', NOW(), 'Phạm Văn D', 'sv101', '0977123456', 'USER', 'ONLINE'),
-                                                                                                                                                             (8, 'Phòng 303 Nhà A', 'admin2.jpg', '1985-04-18', 'admin2@uni.com', 'Male', b'1', NOW(), 'Phó Quản Trị', 'admin456', '0283822102', 'ADMIN', 'ONLINE');
+INSERT INTO `user` (`user_id`, `address`, `avatar`, `dob`, `email`, `gender`, `is_active`, `last_online`, `name`, `password`, `phone`, `role`, `status`, `type`) VALUES
+                                                                                                                                                             (5, 'KTX Khu A ĐHQG', 'avatar5.jpg', '2002-09-03', '2150003@student.hcmus.edu.vn', 'Female', b'1', NOW(), 'Lê Thị C', 'sv789', '0911222333', 'USER', 'ONLINE','NORMAL'),
+                                                                                                                                                             (6, 'Khoa Toán - ĐH KHTN', 'avatar_prof2.jpg', '1975-08-12', 'prof.hien@hcmus.edu.vn', 'Female', b'1', NOW(), 'PGS. Nguyễn Thị Hiền', 'gv456', '0909988776', 'USER', 'OFFLINE', 'NORMAL'),
+                                                                                                                                                             (7, '123 Lý Thường Kiệt', 'avatar7.png', '2000-12-25', '2150004@student.hcmus.edu.vn', 'Male', b'1', NOW(), 'Phạm Văn D', 'sv101', '0977123456', 'USER', 'ONLINE', 'NORMAL'),
+                                                                                                                                                             (8, 'Phòng 303 Nhà A', 'admin2.jpg', '1985-04-18', 'admin2@uni.com', 'Male', b'1', NOW(), 'Phó Quản Trị', 'admin456', '0283822102', 'ADMIN', 'ONLINE', 'NORMAL');
 
 -- 2. Category (Thêm chuyên ngành)
 INSERT INTO `category` (`cate_id`, `cate_desc`, `cate_icon`, `cate_name`) VALUES
@@ -232,7 +232,7 @@ INSERT INTO `file_document` (`file_id`, `file_type`, `file_url`, `doc_id`) VALUE
 
 -- 16. Notification (Thông báo mới)
 INSERT INTO `notification` (`noti_id`, `content`, `created_at`, `title`, `type`) VALUES
-                                                                                     (5, 'Tài liệu Kế Toán vừa được cập nhật', NOW(), 'Cập Nhật Tài Liệu', 'UPDATE'),
+                                                                                     (5, 'Tài liệu Kế Toán vừa được cập nhật', NOW(), 'Cập Nhật Tài Liệu', 'CART'),
                                                                                      (6, 'Đơn hàng #005 đã được xác nhận', NOW(), 'Xác Nhận Đơn Hàng', 'ORDER'),
                                                                                      (7, 'Mã GIAMGIA30 áp dụng đến 30/11', NOW(), 'Khuyến Mãi Mới', 'PROMOTION'),
                                                                                      (8, 'Nhận xét mới về tài liệu của bạn', NOW(), 'Phản Hồi Đánh Giá', 'REVIEW');
