@@ -6,22 +6,27 @@ import com.android.APILogin.utils.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("api/payment")
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
-    private VNPayConfig vNPayConfig;
+    private final VNPayConfig vNPayConfig;
 
     @GetMapping("/vn-pay-callback")
-    @ResponseBody
     public String vnPayCallback(HttpServletRequest request, Model model){
 //        return new ResponseData<>(HttpStatus.ACCEPTED.value(), "thanh toan thanh cong");
         int paymentStatus = orderReturn(request);
@@ -31,53 +36,89 @@ public class PaymentController {
         String transactionId = request.getParameter("vnp_TransactionNo");
         String totalPrice = request.getParameter("vnp_Amount");
 
+        // 1. Parse chuỗi gốc
+        DateTimeFormatter inputFmt  = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime dateTime      = LocalDateTime.parse(paymentTime, inputFmt);
+
+        // 2. Định nghĩa formatter đầu ra yyyy/MM/dd - HH:mm:ss
+        DateTimeFormatter outputFmt = DateTimeFormatter.ofPattern("yyyy/MM/dd - HH:mm:ss");
+        String formattedDateTime    = dateTime.format(outputFmt);
+
         model.addAttribute("orderId", orderInfo);
         model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("paymentTime", paymentTime);
+        model.addAttribute("paymentTime", formattedDateTime);
         model.addAttribute("transactionId", transactionId);
 
-        return paymentStatus == 1 ? "orderSuccess" : "orderFail";
+        return paymentStatus == 1 ? "payment/orderSuccess" : "payment/orderFail";
     }
 
-    public int orderReturn(HttpServletRequest request) {
-        Map<String, String> fields = new HashMap<>();
+    /**
+     * Xử lý callback VNPay, kiểm tra checksum, nội dung đơn hàng,
+     * cập nhật trạng thái và trả về 1 nếu thành công, ngược lại 0.
+     */
+    private int orderReturn(HttpServletRequest request) {
+        try {
+            // 1. Đọc tất cả params và URL-encode
+            Map<String, String> fields = new HashMap<>();
+            Enumeration<String> params = request.getParameterNames();
+            while (params.hasMoreElements()) {
+                String name = params.nextElement();
+                String value = URLEncoder.encode(
+                        request.getParameter(name),
+                        StandardCharsets.US_ASCII.toString()
+                );
+                if (value != null && !value.isEmpty()) {
+                    fields.put(name, value);
+                }
+            }
 
-        // Bước 1: Lấy toàn bộ parameter gửi từ VNPay
-        Map<String, String[]> paramMap = request.getParameterMap();
-        for (Map.Entry<String, String[]> entry : paramMap.entrySet()) {
-            fields.put(entry.getKey(), entry.getValue()[0]);
+            // 2. Lưu và loại bỏ tham số checksum
+            String vnpSecureHash = request.getParameter("vnp_SecureHash");
+            fields.remove("vnp_SecureHash");
+            fields.remove("vnp_SecureHashType");
+
+            // 3. Tạo chữ ký và so sánh
+            String computedHash = VNPayUtil.hashAllFields(fields, vNPayConfig.getSecretKey());
+            if (!computedHash.equals(vnpSecureHash)) {
+                // checksum không hợp lệ
+                return 0;
+            }
+
+            // 4. Lấy thông tin đơn hàng
+            String orderId = request.getParameter("vnp_TxnRef");
+            double amount   = Double.parseDouble(request.getParameter("vnp_Amount"));
+            String respCode = request.getParameter("vnp_ResponseCode");
+
+            // 5. Kiểm tra orderId, số tiền, trạng thái đang chờ
+//            if (!paymentService.checkOrderId(orderId)) {
+//                return 0;
+//            }
+//            if (!paymentService.checkAmount(orderId, amount)) {
+//                return 0;
+//            }
+//            if (!paymentService.checkOrderPendingStatus(orderId)) {
+//                return 0;
+//            }
+
+            // 6. Xử lý thành công / thất bại
+            if ("00".equals(respCode)) {
+                // thanh toán OK
+//                paymentService.completeOrder(orderId);
+                return 1;
+            } else {
+                // thanh toán lỗi (VD: user hủy hoặc từ chối)
+//                paymentService.updateOrderStatus(orderId, OrderStatus.UNPAID);
+                return 0;
+            }
+        } catch (Exception ex) {
+            // bất kỳ lỗi nào khác
+            ex.printStackTrace();
+            return 0;
         }
-
-        // Bước 2: Lấy SecureHash gửi từ VNPay
-        String vnp_SecureHash = fields.remove("vnp_SecureHash");
-        String vnp_SecureHashType = fields.remove("vnp_SecureHashType"); // thường là SHA512, bỏ qua
-
-        // Bước 3: Tạo lại chuỗi dữ liệu để hash
-        String signData = VNPayUtil.hashAllFields(fields);
-
-        // Bước 4: Tự mình hash với secretKey để kiểm tra
-        String myHash = VNPayUtil.hmacSHA512(vNPayConfig.secretKey, signData);
-
-        // Bước 5: So sánh SecureHash
-        if (!myHash.equalsIgnoreCase(vnp_SecureHash)) {
-            System.out.println("Sai checksum VNPay!");
-            return -1; // Sai checksum => không tin cậy
-        }
-
-        // Bước 6: Đọc trạng thái giao dịch VNPay gửi về
-        String responseCode = request.getParameter("vnp_ResponseCode");
-        String transactionStatus = request.getParameter("vnp_TransactionStatus");
-
-        // Bước 7: Nếu responseCode = "00" và transactionStatus = "00" => thanh toán thành công
-        if ("00".equals(responseCode) && "00".equals(transactionStatus)) {
-            return 1; // Thành công
-        }
-
-        return 0; // Thất bại
     }
-
 
     @GetMapping("/{orderId}")
+    @ResponseBody
     public ResponseEntity<Map<String,String>> createPayment(
             @PathVariable String orderId,
             @RequestParam double amount,
@@ -87,5 +128,11 @@ public class PaymentController {
         // Trả về JSON chứa URL
         Map<String,String> body = Collections.singletonMap("paymentUrl", url);
         return ResponseEntity.ok(body);
+    }
+
+    @GetMapping("/demo")
+    public String demo(Model model) {
+
+        return "payment/orderSuccess";
     }
 }

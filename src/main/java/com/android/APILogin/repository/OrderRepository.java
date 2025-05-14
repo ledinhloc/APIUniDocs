@@ -1,6 +1,9 @@
 package com.android.APILogin.repository;
 
+import com.android.APILogin.entity.Document;
 import com.android.APILogin.entity.Order;
+import com.android.APILogin.entity.User;
+import com.android.APILogin.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,4 +43,20 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "AND o.user.userId = :userId " +
             "GROUP BY FUNCTION('DATE_FORMAT', o.orderAt, '%m/%Y'), c.cateName")
     List<Map<String, Object>> getMonthlyRevenueByCategory(@Param("userId") Long userId);
+
+    @Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END FROM Order o " +
+           "JOIN o.orderDetails od " +
+           "WHERE o.user = :user AND o.orderStatus = :status AND od.document = :document")
+    boolean existsByUserAndOrderStatusAndOrderDetailsDocument(
+            @Param("user") User user,
+            @Param("status") OrderStatus status,
+            @Param("document") Document document);
+
+    @Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END FROM Order o " +
+           "JOIN o.orderDetails od " +
+           "WHERE o.user = :user AND o.orderStatus = :status AND od.document.docId IN :documentIds")
+    boolean existsByUserAndOrderStatusAndDocumentIds(
+            @Param("user") User user,
+            @Param("status") OrderStatus status,
+            @Param("documentIds") List<Long> documentIds);
 }

@@ -1,0 +1,34 @@
+
+<!-- orderFail.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thất bại</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full text-center">
+    <h1 class="text-4xl font-extrabold text-red-600 mb-4">❌ Thất bại!</h1>
+    <p class="text-lg text-gray-700">Đơn hàng:</p>
+    <p class="text-xl font-semibold text-gray-900 mb-4" th:text="${orderId}">ORD12345</p>
+
+    <p class="text-gray-700 mb-6">Nếu bạn đã bị trừ tiền, vui lòng liên hệ<br/>bộ phận hỗ trợ của chúng tôi.</p>
+
+    <button
+            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full transition-transform transform hover:scale-105"
+            onclick="closePage()">
+        Đóng
+    </button>
+</div>
+
+<script>
+    function closePage() {
+        window.close();
+        setTimeout(() => history.back(), 300);
+    }
+</script>
+</body>
+</html>
