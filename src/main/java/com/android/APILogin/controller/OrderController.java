@@ -40,4 +40,10 @@ public class OrderController {
             return new ResponseData<>(HttpStatus.OK.value(), "success", orderDetailDtoRequest);
         }
     }
+
+    @GetMapping("/shop/order")
+    public ResponseData<List<OrderDetailDtoRequest>> getOrderDetailByStatusAndPostId(@RequestParam OrderStatus status, @RequestParam Long postId){
+        List<OrderDetailDtoRequest> list = orderServiceImpl.getOrderDetailsByStatus(postId,status);
+        return new ResponseData<>(HttpStatus.OK.value(), "success", list);
+    }
 }

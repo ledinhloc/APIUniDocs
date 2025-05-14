@@ -42,4 +42,9 @@ public class OrderServiceImpl {
     public OrderDetailDtoRequest getOrderDetails(Long orderId, Long docId, Long userId) {
         return orderRepository.findOrderDetailsByOrderId(orderId,docId,userId);
     }
+
+    public List<OrderDetailDtoRequest> getOrderDetailsByStatus(Long postId, OrderStatus status) {
+        List<OrderDetailDtoRequest> results = orderRepository.findOrderDetailsByOrderStatusAndPostId(status, postId);
+        return results;
+    }
 }

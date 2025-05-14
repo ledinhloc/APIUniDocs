@@ -62,4 +62,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("docId") Long docId,
             @Param("userId") Long userId);
 
+    @Query("SELECT new com.android.APILogin.dto.request.OrderDetailDtoRequest(" +
+            "o.orderId, d.docId, d.docName, u.userId, u.name, u.phone, u.address, o.orderAt, o.orderStatus) " +
+            "FROM Order o " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.document d " +
+            "JOIN o.user u " +
+            "WHERE o.orderStatus = :orderStatus AND d.user.userId = :postId")
+    List<OrderDetailDtoRequest> findOrderDetailsByOrderStatusAndPostId(
+            @Param("orderStatus") OrderStatus orderStatus,
+            @Param("postId") Long postId);
+
 }
