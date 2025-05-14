@@ -1,6 +1,8 @@
 package com.android.APILogin.repository;
 
+import com.android.APILogin.dto.request.OrderDetailDtoRequest;
 import com.android.APILogin.entity.Order;
+import com.android.APILogin.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,4 +42,24 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "AND o.user.userId = :userId " +
             "GROUP BY FUNCTION('DATE_FORMAT', o.orderAt, '%m/%Y'), c.cateName")
     List<Map<String, Object>> getMonthlyRevenueByCategory(@Param("userId") Long userId);
+
+    @Query("SELECT od.document, SUM(od.quantity), o.orderId, o.orderStatus " +
+            "FROM OrderDetail od " +
+            "JOIN od.order o " +
+            "WHERE o.user.userId = :userId AND o.orderStatus = :status " +
+            "GROUP BY od.document, o.orderId")
+    List<Object[]> findOrderDetailsByUserAndStatus(@Param("userId") Long userId, @Param("status") OrderStatus status);
+
+    @Query("SELECT new com.android.APILogin.dto.request.OrderDetailDtoRequest(" +
+            "o.orderId, d.docId, d.docName, u.userId, u.name, u.phone, u.address, o.orderAt, o.orderStatus) " +
+            "FROM Order o " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.document d " +
+            "JOIN o.user u " +
+            "WHERE o.orderId = :orderId AND d.docId = :docId AND u.userId = :userId")
+    OrderDetailDtoRequest findOrderDetailsByOrderId(
+            @Param("orderId") Long orderId,
+            @Param("docId") Long docId,
+            @Param("userId") Long userId);
+
 }
