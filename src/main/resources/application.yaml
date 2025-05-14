@@ -25,6 +25,11 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
 open:
   api:
     title: API document
@@ -36,3 +41,9 @@ open:
 external:
   upload:
     dir: D:\lt_android\project_nhom\externalUploads
+#thanh toan vnpay
+payment:
+  vnpay:
+    tmnCode: ${VNP_TMNCODE:12}
+    secretKey: ${VNP_SECRETKEY:12}
+    returnUrl: ${VNP_RETURNURL:http://10.0.2.2:8080/api/payment/vn-pay-callback}
