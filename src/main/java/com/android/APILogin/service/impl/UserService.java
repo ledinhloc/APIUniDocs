@@ -254,7 +254,8 @@ public class UserService {
         userRepository.save(user);
 
         // Chuyển về DTO và trả về
-        return UserMapper.INSTANCE.toDTO(user);
+        UserDtoRequest userDto = new UserDtoRequest(user.getName(),user.getEmail(),user.getAvatar(),user.getPhone(),user.getAddress(),user.getGender(),user.getDob());
+        return userDto;
     }
 
     public String uploadFile(MultipartFile file) {
