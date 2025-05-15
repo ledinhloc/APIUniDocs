@@ -42,12 +42,40 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+//    public List<DocumentDto> getAllDocuments(Long userId) {
+//        if(userId != null) {
+//
+//        }
+//        List<DocumentDto> documents = documentRepository.findAllDoc(userId);
+//        return documents.stream()
+//                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getOriginalPrice(),documentDto.getTotalSold()))
+//                .collect(Collectors.toList());
+//    }
+
     public List<DocumentDto> getAllDocuments(Long userId) {
-        List<DocumentDto> documents = documentRepository.findAllDoc(userId);
-        return documents.stream()
-                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getOriginalPrice(),documentDto.getTotalSold()))
+        // 1. Lấy entity từ DB tuỳ theo userId
+        List<DocumentDto> entities;
+        if (userId != null) {
+            // tồn tại userId → lấy document của user đó
+            entities = documentRepository.findAllDoc(userId);
+        } else {
+            // không có userId → lấy hết
+            entities = documentRepository.findAllDoc();
+        }
+
+        // 2. Map sang DTO
+        return entities.stream()
+                .map(doc -> new DocumentDto(
+                        doc.getDocId(),
+                        doc.getDocName(),
+                        doc.getDocImageUrl(),
+                        doc.getSellPrice(),
+                        doc.getOriginalPrice(),
+                        doc.getTotalSold()     // hoặc trường tương ứng
+                ))
                 .collect(Collectors.toList());
     }
+
 
     public List<DocumentDto> searchDocuments(String keyword) {
         List<Document> documents = documentRepository.searchDocumentByName(keyword);

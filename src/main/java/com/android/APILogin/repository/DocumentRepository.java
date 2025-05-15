@@ -23,6 +23,21 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "WHERE d.user.userId <> :userId")
     List<DocumentDto> findAllDoc(@Param("userId") Long userId);
 
+    @Query("""
+        SELECT new com.android.APILogin.dto.response.DocumentDto(
+            d.docId,
+            d.docName,
+            d.docImageUrl,
+            d.sellPrice,
+            d.originalPrice,
+            (SELECT COALESCE(SUM(od.quantity), 0)
+               FROM OrderDetail od
+              WHERE od.document.docId = d.docId)
+        )
+        FROM Document d
+        """)
+    List<DocumentDto> findAllDoc();
+
     @Query(value = "SELECT d FROM Document d " +
             "WHERE " +
             "((:sortType != 'relevance' AND (:keyword IS NULL OR LOWER(d.docName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +

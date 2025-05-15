@@ -46,4 +46,4 @@ payment:
   vnpay:
     tmnCode: ${VNP_TMNCODE:12}
     secretKey: ${VNP_SECRETKEY:12}
-    returnUrl: ${VNP_RETURNURL:http://196.169.2.158:8080/api/payment/vn-pay-callback}
+    returnUrl: ${VNP_RETURNURL:http://10.0.2.2:8080/api/payment/vn-pay-callback}
