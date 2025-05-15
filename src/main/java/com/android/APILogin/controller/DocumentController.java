@@ -18,7 +18,7 @@ public class DocumentController {
     private DocumentServiceImpl documentServiceImpl;
 
     @GetMapping("/list")
-    public ResponseData<List<DocumentDto>> getAllDocuments(@RequestParam Long userId) {
+    public ResponseData<List<DocumentDto>> getAllDocuments(@RequestParam(value = "userId", required = false) Long userId) {
         List<DocumentDto> listDocument = documentServiceImpl.getAllDocuments(userId);
         if(listDocument == null || listDocument.size() == 0) {
             return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Not found",listDocument);
