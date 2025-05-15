@@ -1,5 +1,6 @@
 package com.android.APILogin.repository;
 
+import com.android.APILogin.dto.request.OrderDetailDtoRequest;
 import com.android.APILogin.entity.Document;
 import com.android.APILogin.dto.request.OrderDtoRequest;
 import com.android.APILogin.entity.Order;
@@ -76,10 +77,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "JOIN od.document d " +
             "JOIN o.user u " +
             "WHERE o.orderId = :orderId AND d.docId = :docId AND u.userId = :userId")
-    OrderDetailDtoRequest findOrderDetailsByOrderId(
-            @Param("orderId") Long orderId,
-            @Param("docId") Long docId,
-            @Param("userId") Long userId);
+    OrderDetailDtoRequest findOrderDetailsByOrderId(@Param("orderId") Long orderId, @Param("docId") Long docId, @Param("userId") Long userId);
 
     @Query("SELECT new com.android.APILogin.dto.request.OrderDtoRequest(" +
             "o.orderId, d.docId, d.docName, d.originalPrice, d.sellPrice, d.docImageUrl, d.docDesc, od.quantity, o.orderStatus) " +

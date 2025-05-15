@@ -16,10 +16,12 @@ import java.util.Optional;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query(value = "SELECT new com.android.APILogin.dto.response.DocumentDto(" +
-            "d.docId, d.docName, d.docImageUrl, d.sellPrice, " +
-            "(SELECT COALESCE(SUM(od.quantity), 0) FROM OrderDetail od WHERE od.document.docId = d.docId)) " +
-            "FROM Document d ")
-    List<DocumentDto> findAllDoc();
+            "d.docId, d.docName, d.docImageUrl, d.sellPrice, d.originalPrice, " +
+            "(SELECT COALESCE(SUM(od.quantity), 0) FROM OrderDetail od WHERE od.document.docId = d.docId) " +
+            ") " +
+            "FROM Document d " +
+            "WHERE d.user.userId <> :userId")
+    List<DocumentDto> findAllDoc(@Param("userId") Long userId);
 
     @Query(value = "SELECT d FROM Document d " +
             "WHERE " +

@@ -42,10 +42,10 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<DocumentDto> getAllDocuments() {
-        List<DocumentDto> documents = documentRepository.findAllDoc();
+    public List<DocumentDto> getAllDocuments(Long userId) {
+        List<DocumentDto> documents = documentRepository.findAllDoc(userId);
         return documents.stream()
-                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
+                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getOriginalPrice(),documentDto.getTotalSold()))
                 .collect(Collectors.toList());
     }
 
@@ -91,7 +91,7 @@ public class DocumentServiceImpl implements DocumentService {
             return null;
         }
         return documents.stream()
-                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
+                .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(),documentDto.getTotalSold()))
                 .collect(Collectors.toList());
     }
 
@@ -144,7 +144,7 @@ public class DocumentServiceImpl implements DocumentService {
         }
         else{
             return documents.stream()
-                    .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
+                    .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getOriginalPrice(),documentDto.getTotalSold()))
                     .collect(Collectors.toList());
         }
     }
@@ -156,7 +156,7 @@ public class DocumentServiceImpl implements DocumentService {
         }
         else{
             return documents.stream()
-                    .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getTotalSold()))
+                    .map(documentDto -> new DocumentDto(documentDto.getDocId(), documentDto.getDocName(), documentDto.getDocImageUrl(), documentDto.getSellPrice(), documentDto.getOriginalPrice(),documentDto.getTotalSold()))
                     .collect(Collectors.toList());
         }
     }

@@ -51,7 +51,16 @@ public class DocumentDto {
         this.docImageUrl = docImageUrl;
     }
 
-    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice, Long totalSold) {
+    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice, Double originalPrice,Long totalSold) {
+        this.docId = docId;
+        this.docName = docName;
+        this.docImageUrl = docImageUrl;
+        this.sellPrice = sellPrice;
+        this.originalPrice = originalPrice;
+        this.totalSold = totalSold;
+    }
+
+    public DocumentDto(Long docId, String docName, String docImageUrl, Double sellPrice,Long totalSold) {
         this.docId = docId;
         this.docName = docName;
         this.docImageUrl = docImageUrl;

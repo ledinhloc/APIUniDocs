@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DocumentService {
-    List<DocumentDto> getAllDocuments();
+    List<DocumentDto> getAllDocuments(Long userId);
     List<DocumentDto> searchDocuments(String keyword);
     List<DocumentDto> filterDocuments(@Param("keyword") String keyword,
                                       @Param("sortType") String sortType,

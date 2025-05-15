@@ -18,13 +18,13 @@ public class DocumentController {
     private DocumentServiceImpl documentServiceImpl;
 
     @GetMapping("/list")
-    public ResponseData<List<DocumentDto>> getAllDocuments() {
-        List<DocumentDto> listDocument = documentServiceImpl.getAllDocuments();
+    public ResponseData<List<DocumentDto>> getAllDocuments(@RequestParam Long userId) {
+        List<DocumentDto> listDocument = documentServiceImpl.getAllDocuments(userId);
         if(listDocument == null || listDocument.size() == 0) {
             return new ResponseData<>(HttpStatus.NOT_FOUND.value(),"Not found",listDocument);
         }
         else{
-            return new ResponseData<>(HttpStatus.OK.value(), "list document", documentServiceImpl.getAllDocuments());
+            return new ResponseData<>(HttpStatus.OK.value(), "list document", documentServiceImpl.getAllDocuments(userId));
         }
     }
 
