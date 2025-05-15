@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/order")
 @RequiredArgsConstructor
 public class OrderController {
 
@@ -37,16 +37,18 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/create")
-    public ResponseData<Long> createOrderFromCart(@RequestBody CreateOrderFromCartRequest request) {
-        Order order = orderService.createOrderFromCart(request);
-        return new ResponseData<>(HttpStatus.OK.value(),"success",order.getOrderId()) ;
-    }
+//    @PostMapping("/create")
+//    public ResponseData<Long> createOrderFromCart(@RequestBody CreateOrderFromCartRequest request) {
+//        Order order = orderService.createOrderFromCart(request);
+//        return new ResponseData<>(HttpStatus.OK.value(),"success",order.getOrderId()) ;
+//    }
 
-    @PostMapping("/{orderId}/payment-success")
-    public ResponseEntity<Void> handlePaymentSuccess(@PathVariable Long orderId) {
-        orderService.handlePaymentSuccess(orderId);
-        return ResponseEntity.ok().build();
+//    @PostMapping("/{orderId}/payment-success")
+//    public ResponseEntity<Void> handlePaymentSuccess(@PathVariable Long orderId) {
+//        orderService.handlePaymentSuccess(orderId);
+//        return ResponseEntity.ok().build();
+//    }
+
     @GetMapping("/order-detail/{orderId}/{docId}/{userId}")
     public ResponseData<OrderDetailDtoRequest> getOrderDetail(@PathVariable Long orderId, @PathVariable Long docId, @PathVariable Long userId)
     {
