@@ -2,18 +2,24 @@ package com.android.APILogin.service.impl;
 
 import com.android.APILogin.entity.*;
 import com.android.APILogin.enums.DiscountStatus;
+import com.android.APILogin.dto.request.OrderDetailDtoRequest;
+import com.android.APILogin.dto.request.OrderDtoRequest;
+import com.android.APILogin.entity.Document;
 import com.android.APILogin.enums.OrderStatus;
 import com.android.APILogin.repository.*;
 import com.android.APILogin.service.OrderService;
 import com.android.APILogin.dto.request.CreateOrderFromCartRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import com.android.APILogin.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service xử lý các thao tác liên quan đến Order
@@ -66,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (Cart cartItem : cartItems) {
             Document document = cartItem.getDocument();
-            
+
             // Kiểm tra số lượng tồn kho trước khi tạo đơn hàng
             if (document.getMaxQuantity() < cartItem.getQuantity()) {
                 throw new RuntimeException("Insufficient quantity for document: " + document.getDocName());
@@ -82,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
                     .build();
 
             orderDetails.add(orderDetail);
-            
+
             // Cập nhật tổng tiền gốc và tổng tiền bán
             totalOriginalPrice += document.getOriginalPrice() * cartItem.getQuantity();
             totalSellPrice += document.getSellPrice() * cartItem.getQuantity();
@@ -112,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
 
             // Tính toán giá trị giảm giá dựa trên loại discount
             double discountAmount = calculateDiscountAmount(discount, totalSellPrice);
-            
+
             // Tạo order discount để lưu thông tin giảm giá
             OrderDiscount orderDiscount = OrderDiscount.builder()
                     .order(order)
@@ -121,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
                     .build();
 
             orderDiscountRepository.save(orderDiscount);
-            
+
             // Cập nhật tổng tiền sau khi áp dụng discount
             totalSellPrice -= discountAmount;
             order.setTotalSellPrice(totalSellPrice);
@@ -194,7 +200,7 @@ public class OrderServiceImpl implements OrderService {
      */
     private double calculateDiscountAmount(Discount discount, double totalPrice) {
         double discountAmount = 0;
-        
+
         // Tính giá trị giảm giá dựa trên loại discount
         switch (discount.getDiscountType()) {
             case PERCENT:
@@ -206,12 +212,42 @@ public class OrderServiceImpl implements OrderService {
                 discountAmount = discount.getDiscountValue();
                 break;
         }
-        
+
         // Kiểm tra và giới hạn giá trị giảm giá tối đa nếu có
         if (discount.getMaxPrice() != null && discountAmount > discount.getMaxPrice()) {
             discountAmount = discount.getMaxPrice();
         }
-        
+
         return discountAmount;
     }
+
+
+    public List<OrderDtoRequest> getOrderHistoryByStatus(Long userId, OrderStatus status) {
+        List<Object[]> results = orderRepository.findOrderDetailsByUserAndStatus(userId, status);
+
+        return results.stream().map(result -> {
+            Document document = (Document) result[0];
+            Long quantity = (Long) result[1];
+            Long orderId = (Long) result[2];
+            OrderStatus orderStatus = (OrderStatus) result[3];
+
+            return OrderDtoRequest.builder()
+                    .orderId(orderId)
+                    .docId(document.getDocId())
+                    .docName(document.getDocName())
+                    .originalPrice(document.getOriginalPrice())
+                    .sellPrice(document.getSellPrice())
+                    .docImageUrl(document.getDocImageUrl())
+                    .docDesc(document.getDocDesc())
+                    .quantity(quantity.intValue())
+                    .status(orderStatus)
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    public OrderDetailDtoRequest getOrderDetails(Long orderId, Long docId, Long userId) {
+        return orderRepository.findOrderDetailsByOrderId(orderId,docId,userId);
+    }
+
+
 }
