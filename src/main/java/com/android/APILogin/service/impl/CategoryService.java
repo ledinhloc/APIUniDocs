@@ -6,6 +6,7 @@ import com.android.APILogin.dto.response.DocumentDto;
 import com.android.APILogin.entity.Category;
 import com.android.APILogin.entity.Document;
 import com.android.APILogin.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private CategoryMapper categoryMapper;
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     public List<CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();

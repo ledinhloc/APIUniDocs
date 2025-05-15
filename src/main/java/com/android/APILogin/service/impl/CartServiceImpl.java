@@ -9,6 +9,7 @@ import com.android.APILogin.repository.CartRepository;
 import com.android.APILogin.repository.DocumentRepository;
 import com.android.APILogin.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +17,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl {
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DocumentRepository documentRepository;
-    @Autowired
-    private CartMapper cartMapper;
+    private final CartRepository cartRepository;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
+//    private final CartMapper cartMapper;
 
     public List<CartDto> getCartByUserId(Long userId) {
         List<CartDto> carts = cartRepository.getCartByUserId(userId);

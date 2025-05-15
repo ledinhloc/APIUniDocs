@@ -3,22 +3,38 @@ package com.android.APILogin.service.impl;
 import com.android.APILogin.dto.request.ReviewCriterialDto;
 import com.android.APILogin.dto.request.ReviewDto;
 import com.android.APILogin.entity.Review;
+import com.android.APILogin.entity.User;
+import com.android.APILogin.entity.Document;
+import com.android.APILogin.entity.FileMedia;
+import com.android.APILogin.enums.FileType;
 import com.android.APILogin.repository.ReviewCriterialRepository;
 import com.android.APILogin.repository.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.android.APILogin.repository.DocumentRepository;
+import com.android.APILogin.repository.UserRepository;
+import com.android.APILogin.service.CloudinaryService;
+import com.android.APILogin.utils.FileUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ReviewServiceImpl {
-    @Autowired
-    private ReviewRepository reviewRepository;
-    @Autowired
-    private ReviewCriterialRepository reviewCriterialRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewCriterialRepository reviewCriterialRepository;
+    private final DocumentRepository documentRepository;
+    private final UserRepository userRepository;
+    private final CloudinaryService cloudinaryService;
+    private final FileUtils fileUtils;
 
 //    public List<ReviewDto> getAllReviewByDocId(Long docId){
 //        List<ReviewDto> reviewDtos = reviewRepository.findReviewByDocumentId(docId);
@@ -80,5 +96,55 @@ public class ReviewServiceImpl {
             map.put(rate, count);
         }
         return map;
+    }
+
+    public boolean checkUserPurchasedDocument(Long userId, Long docId) {
+        // Kiểm tra xem user đã mua document này chưa
+        return documentRepository.existsByDocIdAndOrderDetails_Order_User_UserId(docId, userId);
+    }
+
+    public boolean addReview(ReviewDto reviewDto, List<MultipartFile> files) {
+        try {
+            // Tạo đối tượng Review mới
+            Review review = new Review();
+            review.setRate(reviewDto.getRate());
+            review.setContent(reviewDto.getContent());
+            review.setCreatedAt(LocalDateTime.now());
+            
+            // Set user và document
+            User user = userRepository.findById(reviewDto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Document document = documentRepository.findById(reviewDto.getDocId())
+                    .orElseThrow(() -> new RuntimeException("Document not found"));
+            
+            review.setUser(user);
+            review.setDocument(document);
+
+            // Xử lý upload files nếu có
+            if (files != null && !files.isEmpty()) {
+                List<FileMedia> fileMedias = new ArrayList<>();
+                for (MultipartFile file : files) {
+
+
+                    // Upload file lên Cloudinary
+                    String fileUrl = cloudinaryService.uploadFile(file, "review_images");
+
+                    // Tạo FileMedia và liên kết với review
+                    FileMedia fileMedia = new FileMedia();
+                    fileMedia.setFileUrl(fileUrl);
+                    fileMedia.setFileType(FileType.IMAGE);
+                    fileMedia.setReview(review);
+                    fileMedias.add(fileMedia);
+                }
+                review.setFileMedias(fileMedias);
+            }
+
+            // Lưu review
+            reviewRepository.save(review);
+            return true;
+        } catch (Exception e) {
+            log.error("Error adding review: ", e);
+            return false;
+        }
     }
 }

@@ -18,6 +18,7 @@ public class ReviewDto {
     private LocalDateTime createdAt;
     private String content;
     private Long userId;
+    private Long docId;
     private String name;
     private String avatar;
     private List<ReviewCriterialDto> criterialDtos;

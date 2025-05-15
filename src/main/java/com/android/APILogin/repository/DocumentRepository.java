@@ -112,4 +112,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "CASE WHEN :sortType = 'price_desc' THEN d.sellPrice ELSE NULL END DESC, " +
             "d.docId ASC")
     List<DocumentDto> findByUserAndTypeSort(@Param("userId") Long userId, @Param("sortType") String sortType);
+
+    @Query("SELECT CASE WHEN COUNT(od) > 0 THEN true ELSE false END " +
+           "FROM OrderDetail od " +
+           "JOIN od.order o " +
+           "WHERE od.document.docId = :docId AND o.user.userId = :userId")
+    boolean existsByDocIdAndOrderDetails_Order_User_UserId(@Param("docId") Long docId, @Param("userId") Long userId);
 }
