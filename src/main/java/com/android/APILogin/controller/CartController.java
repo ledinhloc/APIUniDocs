@@ -27,6 +27,7 @@ public class CartController {
             return new ResponseData<>(HttpStatus.OK.value(), "cart found", carts);
         }
     }
+
     @PostMapping("/add-update")
     public ResponseData<CartDto> addOrUpdate(@RequestBody CartDto cart) {
         CartDto dto = cartServiceImpl.addOrUpdateCart(cart);
@@ -37,6 +38,18 @@ public class CartController {
             return new ResponseData<>(HttpStatus.OK.value(), "cart found", dto);
         }
     }
+
+    @PostMapping("/update")
+    public ResponseData<CartDto> updateCart(@RequestBody CartDto cart) {
+        CartDto dto = cartServiceImpl.updateCart(cart);
+        if(dto == null) {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Successfully", dto);
+        }
+        else{
+            return new ResponseData<>(HttpStatus.OK.value(), "cart found", dto);
+        }
+    }
+
     @DeleteMapping("/remove/{cartId}")
     public ResponseData<Void> removeCart(@PathVariable Long cartId) {
         try {
