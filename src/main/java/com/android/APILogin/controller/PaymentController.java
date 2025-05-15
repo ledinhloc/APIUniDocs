@@ -1,10 +1,15 @@
 package com.android.APILogin.controller;
 
 import com.android.APILogin.configuration.VNPayConfig;
+import com.android.APILogin.dto.request.CreateOrderFromCartRequest;
+import com.android.APILogin.dto.response.ResponseData;
+import com.android.APILogin.entity.Order;
+import com.android.APILogin.service.OrderService;
 import com.android.APILogin.service.impl.PaymentService;
 import com.android.APILogin.utils.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +30,7 @@ import java.util.Map;
 public class PaymentController {
     private final PaymentService paymentService;
     private final VNPayConfig vNPayConfig;
+    private final OrderService orderService;
 
     @GetMapping("/vn-pay-callback")
     public String vnPayCallback(HttpServletRequest request, Model model){
@@ -49,7 +55,12 @@ public class PaymentController {
         model.addAttribute("paymentTime", formattedDateTime);
         model.addAttribute("transactionId", transactionId);
 
-        return paymentStatus == 1 ? "payment/orderSuccess" : "payment/orderFail";
+        if(paymentStatus == 1){
+            orderService.handlePaymentSuccess(Long.valueOf(orderInfo));
+            return "payment/orderSuccess";
+        }
+
+        return "payment/orderFail";
     }
 
     /**
@@ -117,22 +128,39 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/{orderId}")
+//    @GetMapping("/{orderId}")
+//    @ResponseBody
+//    public ResponseEntity<Map<String,String>> createPayment(
+//            @PathVariable String orderId,
+//            @RequestParam double amount,
+//            @RequestParam(required = false, defaultValue = "") String info) {
+//        // Sinh URL
+//        String url = paymentService.payOrder(orderId, amount, info);
+//        // Trả về JSON chứa URL
+//        Map<String,String> body = Collections.singletonMap("paymentUrl", url);
+//        return ResponseEntity.ok(body);
+//    }
+
+    @PostMapping("/")
     @ResponseBody
-    public ResponseEntity<Map<String,String>> createPayment(
-            @PathVariable String orderId,
-            @RequestParam double amount,
-            @RequestParam(required = false, defaultValue = "") String info) {
+    public ResponseData<Map<String,String>> createPayment(@RequestBody CreateOrderFromCartRequest request) {
+        //tao order
+        Order order = orderService.createOrderFromCart(request);
         // Sinh URL
-        String url = paymentService.payOrder(orderId, amount, info);
+        String url = paymentService.payOrder(String.valueOf(order.getOrderId()), order.getTotalSellPrice(), order.getOrderId().toString());
         // Trả về JSON chứa URL
         Map<String,String> body = Collections.singletonMap("paymentUrl", url);
-        return ResponseEntity.ok(body);
+        return new ResponseData<>(HttpStatus.OK.value(), "success", body);
     }
+
+//    @PostMapping("/create")
+//    public ResponseData<Long> createOrderFromCart(@RequestBody CreateOrderFromCartRequest request) {
+//        Order order = orderService.createOrderFromCart(request);
+//        return new ResponseData<>(HttpStatus.OK.value(),"success",order.getOrderId()) ;
+//    }
 
     @GetMapping("/demo")
     public String demo(Model model) {
-
         return "payment/orderSuccess";
     }
 }
