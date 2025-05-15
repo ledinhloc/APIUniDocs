@@ -42,8 +42,18 @@ public class OrderController {
     }
 
     @GetMapping("/shop/order")
-    public ResponseData<List<OrderDetailDtoRequest>> getOrderDetailByStatusAndPostId(@RequestParam OrderStatus status, @RequestParam Long postId){
-        List<OrderDetailDtoRequest> list = orderServiceImpl.getOrderDetailsByStatus(postId,status);
+    public ResponseData<List<OrderDtoRequest>> getOrderDetailByStatusAndPostId(@RequestParam OrderStatus status, @RequestParam Long postId){
+        List<OrderDtoRequest> list = orderServiceImpl.getOrderDetailsByStatus(postId,status);
         return new ResponseData<>(HttpStatus.OK.value(), "success", list);
+    }
+
+    @PostMapping("/update-order")
+    public ResponseData<Void> updateOrderStatus(@RequestParam Long orderId, @RequestParam OrderStatus status) {
+        boolean success = orderServiceImpl.updateOrderStatus(orderId, status);
+        if (success) {
+            return new ResponseData<>(HttpStatus.OK.value(), "Cập nhật trạng thái thành công", null);
+        } else {
+            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), "Không tìm thấy đơn hàng hoặc cập nhật thất bại", null);
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.android.APILogin.repository;
 
 import com.android.APILogin.dto.request.OrderDetailDtoRequest;
+import com.android.APILogin.dto.request.OrderDtoRequest;
 import com.android.APILogin.entity.Order;
 import com.android.APILogin.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -62,15 +64,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("docId") Long docId,
             @Param("userId") Long userId);
 
-    @Query("SELECT new com.android.APILogin.dto.request.OrderDetailDtoRequest(" +
-            "o.orderId, d.docId, d.docName, u.userId, u.name, u.phone, u.address, o.orderAt, o.orderStatus) " +
+    @Query("SELECT new com.android.APILogin.dto.request.OrderDtoRequest(" +
+            "o.orderId, d.docId, d.docName, d.originalPrice, d.sellPrice, d.docImageUrl, d.docDesc, od.quantity, o.orderStatus) " +
             "FROM Order o " +
             "JOIN o.orderDetails od " +
             "JOIN od.document d " +
             "JOIN o.user u " +
             "WHERE o.orderStatus = :orderStatus AND d.user.userId = :postId")
-    List<OrderDetailDtoRequest> findOrderDetailsByOrderStatusAndPostId(
+    List<OrderDtoRequest> findOrderDetailsByOrderStatusAndPostId(
             @Param("orderStatus") OrderStatus orderStatus,
             @Param("postId") Long postId);
-
 }
