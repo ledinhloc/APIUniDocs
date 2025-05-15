@@ -65,6 +65,13 @@ public class CartServiceImpl {
         return dto;
     }
 
+    public CartDto updateCart(CartDto cart) {
+        Cart cart1 =cartRepository.findById(cart.getCartId()).orElseThrow(() -> new RuntimeException("Cart not found"));
+        cart1.setQuantity(cart.getQuantity());
+        cartRepository.save(cart1);
+        return cart;
+    }
+
     public void deleteCartItem(Long cartId) {
         if(cartRepository.existsById(cartId)) {
             cartRepository.deleteById(cartId);
@@ -78,4 +85,6 @@ public class CartServiceImpl {
         }
 
     }
+
+
 }

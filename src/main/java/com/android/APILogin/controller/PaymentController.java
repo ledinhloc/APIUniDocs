@@ -40,7 +40,11 @@ public class PaymentController {
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
-        String totalPrice = request.getParameter("vnp_Amount");
+        String totalPriceRaw = request.getParameter("vnp_Amount");
+
+        String totalPrice = totalPriceRaw.length() > 2
+                ? totalPriceRaw.substring(0, totalPriceRaw.length() - 2)
+                : totalPriceRaw;
 
         // 1. Parse chuỗi gốc
         DateTimeFormatter inputFmt  = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");

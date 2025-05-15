@@ -1,5 +1,6 @@
 package com.android.APILogin.repository;
 
+import com.android.APILogin.dto.request.OrderDetailDtoRequest;
 import com.android.APILogin.entity.Document;
 import com.android.APILogin.entity.Order;
 import com.android.APILogin.entity.User;
@@ -78,5 +79,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("orderId") Long orderId,
             @Param("docId") Long docId,
             @Param("userId") Long userId);
-
 }
