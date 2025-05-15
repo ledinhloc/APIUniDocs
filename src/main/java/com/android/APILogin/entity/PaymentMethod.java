@@ -25,4 +25,5 @@ public class PaymentMethod {
     @JsonIgnore
     @OneToMany(mappedBy = "paymentMethod", cascade = CascadeType.ALL)
     List<Order> orders;
+
 }

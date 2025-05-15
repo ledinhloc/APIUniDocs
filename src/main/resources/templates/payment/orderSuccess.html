@@ -1,0 +1,46 @@
+<!-- orderSuccess.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thành công</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full text-center">
+    <h1 class="text-4xl font-extrabold text-green-600 mb-4">🎉 Thành công!</h1>
+    <p class="text-lg text-gray-700">Đơn hàng:</p>
+    <p class="text-xl font-semibold text-gray-900 mb-2" th:text="${orderId}">ORD12345</p>
+
+    <div class="space-y-2 mb-6">
+        <div>
+            <span class="font-medium text-gray-700">Số tiền:</span>
+            <span class="text-gray-900" th:text="${totalPrice} + ' VND'">1,000,000 VND</span>
+        </div>
+        <div>
+            <span class="font-medium text-gray-700">Thời gian:</span>
+            <span class="text-gray-900" th:text="${paymentTime}">2025-05-14 15:24:07</span>
+        </div>
+        <div>
+            <span class="font-medium text-gray-700">Mã giao dịch:</span>
+            <span class="text-gray-900" th:text="${transactionId}">TXN123456</span>
+        </div>
+    </div>
+
+    <button
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full transition-transform transform hover:scale-105"
+            onclick="closePage()">
+        Đóng
+    </button>
+</div>
+
+<script>
+    function closePage() {
+        window.close();
+        setTimeout(() => history.back(), 300);
+    }
+</script>
+</body>
+</html>
