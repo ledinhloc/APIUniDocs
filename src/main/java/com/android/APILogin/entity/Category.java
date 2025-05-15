@@ -24,7 +24,7 @@ public class Category {
     @Column(nullable = false)
     String cateDesc;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 500)
     String cateIcon;
 
     @JsonIgnore
