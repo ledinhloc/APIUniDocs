@@ -1,5 +1,6 @@
 package com.android.APILogin.dto.request;
 
+import com.android.APILogin.entity.FileMedia;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,4 +21,5 @@ public class ReviewDto {
     private String name;
     private String avatar;
     private List<ReviewCriterialDto> criterialDtos;
+    private List<FileMedia> fileMedias;
 }
